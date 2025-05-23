@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>注册账号 - 鋆赫论坛</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <a href="index.html">
+        <img src="logo.png" alt="鋆赫财税 Logo" />
+      </a>
+      <span>鋆赫论坛</span>
+    </div>
+    <ul class="nav-actions">
+      <a href="contact.html">联系我们</a>
+      <a href="login.html">登录</a>
+      <select class="lang-switcher">
+        <option>中文</option>
+        <option>EN</option>
+      </select>
+    </ul>
+  </header>
+
+  <main class="main">
+    <div class="intro">
+      <h1>注册账号</h1>
+      <form id="register-form">
+        <label for="email">邮箱</label><br/>
+        <input type="email" id="email" required /><br/><br/>
+
+        <label for="password">密码</label><br/>
+        <input type="password" id="password" required /><br/><br/>
+
+        <label for="invite">邀请码</label><br/>
+        <input type="text" id="invite" required /><br/><br/>
+
+        <button type="submit">注册</button>
+        <p id="register-status" style="margin-top: 10px;"></p>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer">
+    © 2025 鋆赫财税咨询有限公司
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const form = document.getElementById('register-form');
+    const status = document.getElementById('register-status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const invite = document.getElementById('invite').value.trim();
+
+      if (!email || !password || !invite) {
+        status.textContent = "请填写所有字段。";
+        return;
+      }
+
+      // 检查邀请码（示例：邀请码必须是 YUNHE2025）
+      if (invite !== "YUNHE2025") {
+        status.textContent = "邀请码无效。";
+        return;
+      }
+
+      const { user, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        status.textContent = "注册失败：" + error.message;
+      } else {
+        status.textContent = "注册成功，请前往邮箱激活。";
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>

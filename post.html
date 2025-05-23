@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>登录 - 鋆赫财税</title>
+  <title>发布新帖 - 鋆赫论坛</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,7 +12,7 @@
       <a href="index.html">
         <img src="logo.png" alt="鋆赫财税 Logo" />
       </a>
-      <span>鋆赫财税</span>
+      <span>鋆赫论坛</span>
     </div>
     <ul class="nav-actions">
       <a href="contact.html">联系我们</a>
@@ -26,15 +26,17 @@
 
   <main class="main">
     <div class="intro">
-      <h1>登录鋆赫财税账户</h1>
-      <form id="login-form">
-        <input type="email" id="email" placeholder="邮箱" required style="margin: 10px; padding: 8px; width: 250px;" />
-        <br/>
-        <input type="password" id="password" placeholder="密码" required style="margin: 10px; padding: 8px; width: 250px;" />
-        <br/>
-        <button type="submit" style="padding: 10px 20px;">登录</button>
+      <h1>发布新帖</h1>
+      <form id="post-form">
+        <label for="title">标题</label><br/>
+        <input type="text" id="title" name="title" required /><br/><br/>
+
+        <label for="content">内容</label><br/>
+        <textarea id="content" name="content" rows="10" required></textarea><br/><br/>
+
+        <button type="submit">提交</button>
+        <p id="post-status" style="margin-top: 10px;"></p>
       </form>
-      <p id="login-message" style="color: red;"></p>
     </div>
   </main>
 
@@ -42,29 +44,32 @@
     © 2025 鋆赫财税咨询有限公司
   </footer>
 
-  <!-- Supabase 客户端 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const loginForm = document.getElementById('login-form');
-    const loginMessage = document.getElementById('login-message');
+    const form = document.getElementById('post-form');
+    const status = document.getElementById('post-status');
 
-    loginForm.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const title = form.title.value.trim();
+      const content = form.content.value.trim();
+
+      if (!title || !content) {
+        status.textContent = "标题和内容不能为空。";
+        return;
+      }
+
+      const { data, error } = await supabase.from('posts').insert([{ title, content }]);
+
       if (error) {
-        loginMessage.textContent = '登录失败：' + error.message;
+        status.textContent = "发布失败：" + error.message;
       } else {
-        loginMessage.style.color = 'green';
-        loginMessage.textContent = '登录成功，正在跳转...';
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 1500);
+        status.textContent = "发布成功，跳转中...";
+        setTimeout(() => window.location.href = "forum.html", 1500);
       }
     });
   </script>

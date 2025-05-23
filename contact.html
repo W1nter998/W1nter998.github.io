@@ -1,1 +1,74 @@
-<!DOCTYPE html><html><head><title>联系我们</title><link rel='stylesheet' href='style.css' /></head><body><header>...</header><main><h2>联系方式</h2><p>...</p></main><footer>...</footer></body></html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>联系我们 · 鋆赫财税</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="supabase.js"></script>
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <header>
+    <div class="logo">
+      <a href="index.html"><img src="logo.png" alt="Logo"></a>
+      <span>鋆赫财税</span>
+    </div>
+    <nav>
+      <ul class="nav-main">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="about.html">关于</a></li>
+        <li><a href="services.html">服务</a></li>
+        <li><a href="knowledge.html">知识</a></li>
+        <li><a href="news.html">新闻</a></li>
+        <li><a href="forum.html">论坛</a></li>
+      </ul>
+      <div class="nav-actions" id="nav-actions"></div>
+    </nav>
+  </header>
+
+  <!-- 主体内容 -->
+  <main class="main">
+    <section class="intro">
+      <h1>联系我们</h1>
+      <p>如果您有任何问题，欢迎通过以下方式联系我们：</p>
+      <ul style="text-align:left; display:inline-block; margin-top:20px;">
+        <li>📧 邮箱：support@yunhe-tax.com</li>
+        <li>📞 电话：17395711633</li>
+        <li>🏢 地址：杭州市滨江区西兴街道泽明科创园211</li>
+      </ul>
+      <div style="margin-top:30px;">
+        <p>微信扫码咨询：</p>
+        <img src="qrcode.png" alt="微信二维码" style="width:120px;">
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 杭州鋆赫财税咨询有限公司</p>
+  </footer>
+
+  <script>
+    // 登录状态渲染
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function renderNav() {
+      const { data: { user } } = await supabase.auth.getUser();
+      const nav = document.getElementById('nav-actions');
+      nav.innerHTML = user
+        ? `<span style="color:#fff;">${user.email}</span> <button id="btn-logout">退出</button>`
+        : `<a href="login.html">登录</a> <a href="signup.html">注册</a>`;
+      if (user) {
+        document.getElementById('btn-logout').onclick = async () => {
+          await supabase.auth.signOut();
+          renderNav();
+        };
+      }
+    }
+    renderNav();
+  </script>
+</body>
+</html>

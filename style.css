@@ -1,73 +1,142 @@
+/* 通用设置 */
 body {
   margin: 0;
-  font-family: 'Arial', sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: #fff;
   color: #333;
 }
-header {
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 头部样式 */
+.header {
   background-color: #000;
   color: #fff;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  flex-wrap: wrap;
 }
+
 .logo {
   display: flex;
   align-items: center;
 }
+
 .logo img {
   height: 40px;
   margin-right: 10px;
 }
-.main-nav ul {
-  list-style: none;
+
+.logo span {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* 导航栏样式 */
+.navbar {
   display: flex;
-  margin: 0;
-  padding: 0;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  flex-wrap: wrap;
 }
-.main-nav ul li {
+
+.nav-main {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  gap: 20px;
   position: relative;
-  margin: 0 15px;
 }
-.main-nav ul li a {
+
+.nav-main > li {
+  position: relative;
+}
+
+.nav-main > li > a {
   color: #fff;
-  text-decoration: none;
-  padding: 5px 10px;
-}
-.main-nav ul li:hover .submenu {
+  padding: 10px 15px;
   display: block;
 }
-.submenu {
+
+.nav-main .dropdown-menu {
   display: none;
   position: absolute;
-  background: #111;
   top: 100%;
   left: 0;
-  min-width: 120px;
+  background-color: #000;
+  min-width: 150px;
+  z-index: 999;
 }
-.submenu li {
-  margin: 0;
-}
-.submenu li a {
+
+.nav-main .dropdown:hover .dropdown-menu {
   display: block;
-  padding: 8px 12px;
-  color: #fff;
 }
-.header-actions button {
-  background-color: #fff;
-  color: #000;
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
-}
-footer {
-  background: #000;
+
+.dropdown-menu li a {
   color: #fff;
+  padding: 10px;
+  display: block;
+  white-space: nowrap;
+}
+
+/* 动作按钮 */
+.nav-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.nav-actions a {
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.nav-actions a:hover {
+  background-color: #222;
+}
+
+.lang-switcher {
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* 主体区域 */
+.main {
+  padding: 60px 20px;
   text-align: center;
-  padding: 20px;
 }
-.wechat-qrcode {
-  width: 100px;
-  margin-top: 10px;
+
+.intro h1 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.intro p {
+  font-size: 18px;
+  color: #666;
+}
+
+/* 页脚样式 */
+.footer {
+  background-color: #f2f2f2;
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #888;
 }
