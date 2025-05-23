@@ -1,66 +1,98 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>鋆赫财税 - 登录系统</title>
+  <title>鋆赫财税 - 首页</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-  <header class="top-header">
-    <div class="logo"><img src="https://w1nter998.github.io/logo.png" alt="鋆赫财税 Logo" /></div>
-    <nav class="main-nav">
-      <ul>
+  <header class="header">
+    <div class="logo-area">
+      <img src="https://w1nter998.github.io/logo.png" alt="鋆赫财税 Logo" class="logo" />
+      <span class="brand-name">鋆赫财税</span>
+    </div>
+    <nav class="navbar">
+      <ul class="menu">
         <li><a href="#">首页</a></li>
-        <li><a href="#">服务</a></li>
-        <li><a href="#">分享</a></li>
+        <li class="dropdown">
+          <a href="#">关于我们</a>
+          <ul class="submenu">
+            <li><a href="#">公司简介</a></li>
+            <li><a href="#">企业文化</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#">服务领域</a>
+          <ul class="submenu">
+            <li><a href="#">税务规划</a></li>
+            <li><a href="#">工商服务</a></li>
+            <li><a href="#">财税咨询</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#">分享</a>
+          <ul class="submenu">
+            <li><a href="#">知识专栏</a></li>
+            <li><a href="#">热点洞察</a></li>
+          </ul>
+        </li>
         <li><a href="#">论坛</a></li>
       </ul>
     </nav>
-    <div class="top-right">
-      <a href="#" id="login">登录</a> |
-      <a href="#">联系我们</a> |
-      <select id="language"><option>中文</option><option>English</option></select>
+    <div class="top-actions">
+      <a href="#">联系我们</a>
+      <a href="#">登录</a>
+      <select>
+        <option>中文</option>
+        <option>English</option>
+      </select>
     </div>
   </header>
+
   <main>
-    <section id="auth">
-      <h2>登录 / 注册</h2>
-      <input type="email" id="email" placeholder="邮箱" />
-      <input type="password" id="password" placeholder="密码" />
-      <input type="text" id="invite" placeholder="邀请码（注册必填）" />
-      <button onclick="login()">登录</button>
-      <button onclick="signUp()">注册</button>
+    <section class="intro">
+      <h1>欢迎来到鋆赫财税</h1>
+      <p>致力于为中小企业提供高效专业的财税服务。</p>
+    </section>
+    <section class="login-section">
+      <h2>登录</h2>
+      <input type="email" id="email" placeholder="邮箱">
+      <input type="password" id="password" placeholder="密码">
+      <input type="text" id="invite-code" placeholder="邀请码">
+      <button onclick="login()">登录 / 注册</button>
     </section>
   </main>
+
+  <footer class="footer">
+    <img src="https://w1nter998.github.io/qrcode.png" alt="微信二维码" class="qrcode" />
+    <p>© 鋆赫财税 版权所有</p>
+  </footer>
+
+  <script src="https://code.tidio.co/zh8fcbtdmmsx2ep5nbj3q2ito5do5rhs.js" async></script>
   <script>
     const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
-    const SUPABASE_KEY = "SUPABASE_CLIENT_API_KEY"; // 替换为你的 key
+    const SUPABASE_KEY = "SUPABASE_CLIENT_API_KEY";
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function login() {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: document.getElementById("email").value,
-        password: document.getElementById("password").value
-      });
-      if (error) alert("登录失败：" + error.message);
-      else alert("登录成功！");
-    }
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const inviteCode = document.getElementById('invite-code').value;
 
-    async function signUp() {
-      const inviteCode = document.getElementById("invite").value.trim();
       if (inviteCode !== "YOUR_INVITE_CODE") {
-        alert("无效的邀请码");
+        alert("邀请码错误");
         return;
       }
 
-      const { data, error } = await supabase.auth.signUp({
-        email: document.getElementById("email").value,
-        password: document.getElementById("password").value
-      });
-      if (error) alert("注册失败：" + error.message);
-      else alert("注册成功！");
+      const { error } = await supabase.auth.signUp({ email, password });
+      if (error) {
+        alert("登录失败：" + error.message);
+      } else {
+        alert("注册成功，请查收验证邮件");
+      }
     }
   </script>
 </body>
