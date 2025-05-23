@@ -1,196 +1,83 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>鋆赫财税</title>
   <style>
-    /* ======= 重置基础样式 ======= */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: "Helvetica Neue", sans-serif; line-height: 1.6; }
-
-    /* ======= 顶部导航 ======= */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
     header {
-      background-color: #002f6c;
+      background-color: #000;
       color: white;
-      padding: 10px 20px;
+      padding: 1rem 2rem;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-    }
-
-    .logo-container {
-      display: flex;
       align-items: center;
     }
-
-    .logo-container img {
-      height: 60px; /* 放大 LOGO */
-      margin-right: 10px;
+    .logo img {
+      height: 40px;
     }
-
-    .navbar {
+    nav {
       display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
+      gap: 2rem;
     }
-
-    .navbar ul {
-      list-style: none;
-      display: flex;
-      gap: 20px;
-    }
-
-    .navbar li {
+    nav > div {
       position: relative;
     }
-
-    .navbar a {
-      text-decoration: none;
-      color: white;
-      font-weight: bold;
-    }
-
-    .dropdown-menu {
+    .submenu {
       display: none;
       position: absolute;
       top: 100%;
+      left: 0;
       background: white;
-      padding: 10px;
       color: black;
-      min-width: 120px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      border: 1px solid #ccc;
+      padding: 0.5rem 1rem;
+      white-space: nowrap;
     }
-
-    .dropdown:hover .dropdown-menu {
+    nav > div:hover .submenu {
       display: block;
     }
-
-    .dropdown-menu a {
+    .submenu a {
       display: block;
-      padding: 5px 0;
-      color: #333;
+      padding: 0.5rem 0;
+      text-decoration: none;
+      color: black;
     }
-
-    .navbar-right {
-      display: flex;
-      gap: 10px;
-    }
-
-    /* ======= 内容区域 ======= */
-    main {
-      padding: 40px 20px;
-      text-align: center;
-    }
-
-    .qrcode {
-      margin-top: 40px;
-    }
-
-    .qrcode img {
-      width: 160px; /* 缩小二维码 */
-    }
-
-    /* ======= 移动端导航优化 ======= */
-    .menu-toggle {
-      display: none;
-      background: #fff;
-      border: none;
-      font-size: 26px;
-      cursor: pointer;
-    }
-
-    @media (max-width: 768px) {
-      .navbar ul {
-        display: none;
-        flex-direction: column;
-        width: 100%;
-        background: #004080;
-        padding: 10px;
-      }
-
-      .navbar ul.active {
-        display: flex;
-      }
-
-      .dropdown:hover .dropdown-menu {
-        display: none;
-      }
-
-      .menu-toggle {
-        display: block;
-        color: #fff;
-      }
-
-      .dropdown-menu {
-        position: static;
-        box-shadow: none;
-        background: #e0e0e0;
-      }
+    .submenu a:hover {
+      background-color: #f0f0f0;
     }
   </style>
 </head>
 <body>
-
-  <!-- 顶部区域包含 LOGO 和菜单 -->
   <header>
-    <div class="logo-container">
-      <img src="https://w1nter998.github.io/logo.png" alt="鋆赫财税 Logo" />
+    <div class="logo">
+      <img src="logo.png" alt="鋆赫财税 Logo" />
     </div>
-
-    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-
-    <nav class="navbar">
-      <ul class="navbar-menu">
-        <li class="dropdown">
-          <a href="#">服务</a>
-          <div class="dropdown-menu">
-            <a href="#">工商设立</a>
-            <a href="#">财税代理</a>
-            <a href="#">税务筹划</a>
-            <a href="#">审计服务</a>
-          </div>
-        </li>
-        <li class="dropdown">
-          <a href="#">分享</a>
-          <div class="dropdown-menu">
-            <a href="#">知识文章</a>
-            <a href="#">案例故事</a>
-            <a href="#">客户常见问题</a>
-          </div>
-        </li>
-        <li><a href="#">关于我们</a></li>
-      </ul>
+    <nav>
+      <div>
+        关于我们
+        <div class="submenu">
+          <a href="about.html">公司简介</a>
+        </div>
+      </div>
+      <div>
+        服务内容
+        <div class="submenu">
+          <a href="services.html">服务范围</a>
+        </div>
+      </div>
+      <div>
+        分享
+        <div class="submenu">
+          <a href="news.html">热点资讯</a>
+          <a href="knowledge.html">知识分享</a>
+        </div>
+      </div>
     </nav>
-
-    <div class="navbar-right">
-      <a href="#">登录</a>
-      <a href="#">联系我们</a>
-      <a href="#">EN | 中</a>
-    </div>
   </header>
-
-  <!-- 页面主体内容区域 -->
-  <main>
-    <h1>欢迎来到鋆赫财税</h1>
-    <p>我们专注于企业注册、财税代理、合规审计、税筹服务。</p>
-
-    <div class="qrcode">
-      <p>微信扫码咨询</p>
-      <img src="https://w1nter998.github.io/qrcode.png" alt="微信二维码" />
-    </div>
-  </main>
-
-  <!-- Tidio 实时聊天插件 -->
-  <script src="//code.tidio.co/zh8fcbtdmmsx2ep5nbj3q2ito5do5rhs.js" async></script>
-
-  <!-- 移动端菜单切换脚本 -->
-  <script>
-    function toggleMenu() {
-      document.querySelector('.navbar-menu').classList.toggle('active');
-    }
-  </script>
-
 </body>
 </html>
