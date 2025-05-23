@@ -1,100 +1,76 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>论坛 · 鋆赫论坛</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
   <script type="module" src="supabase.js"></script>
 </head>
 <body>
-
-  <!-- 头部导航 -->
+  <!-- 顶部导航，和其他页面保持一致 -->
   <header>
-    <div class="header-logo">
-      <a href="index.html">
-        <img src="logo.png" alt="Logo">
-        <span class="brand">鋆赫论坛</span>
-      </a>
-    </div>
-    <button class="menu-toggle" onclick="toggleMobileNav()">☰</button>
-    <ul class="nav-main">
-      <li><a href="index.html">首页</a></li>
-      <li><a href="about.html">关于</a></li>
-      <li><a href="services.html">服务</a></li>
-      <li><a href="knowledge.html">知识</a></li>
-      <li><a href="news.html">新闻</a></li>
-      <li><a class="active" href="forum.html">论坛</a></li>
-    </ul>
-    <div class="nav-actions" id="nav-actions">
-      <a href="contact.html">联系我们</a>
-    </div>
+    <div class="logo"><a href="index.html"><img src="logo.png" alt="Logo"></a><span>鋆赫论坛</span></div>
+    <nav>
+      <ul class="nav-main">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="about.html">关于</a></li>
+        <li><a href="services.html">服务</a></li>
+        <li><a href="knowledge.html">知识</a></li>
+        <li><a href="news.html">新闻</a></li>
+        <li><a class="active" href="forum.html">论坛</a></li>
+      </ul>
+      <div class="nav-actions" id="nav-actions">
+        <!-- JS 会根据登录状态插入按钮 -->
+      </div>
+    </nav>
   </header>
 
-  <!-- 移动端导航 -->
-  <nav class="mobile-nav" id="mobile-nav" style="display:none;">
-    <a href="index.html">首页</a>
-    <a href="about.html">关于</a>
-    <a href="services.html">服务</a>
-    <a href="knowledge.html">知识</a>
-    <a href="news.html">新闻</a>
-    <a href="forum.html">论坛</a>
-    <a href="contact.html">联系我们</a>
-  </nav>
-
-  <!-- 主体内容 -->
-  <main>
+  <main class="main">
     <section class="forum-section">
       <h1>社区论坛</h1>
 
-      <!-- 登录后显示发帖区 -->
-      <div id="post-area" style="display:none; margin:20px 0; max-width:600px;">
+      <!-- 发帖区：登录后显示 -->
+      <div id="post-area" style="display:none;margin:20px 0;">
         <h2>发布新帖</h2>
-        <input id="post-title" type="text" placeholder="标题" style="width:100%; padding:8px; margin-bottom:8px;">
-        <textarea id="post-content" rows="5" placeholder="内容" style="width:100%; padding:8px;"></textarea><br>
-        <button id="btn-post" style="margin-top:8px; padding:8px 16px;">发布</button>
-        <p id="post-msg" style="color:red; margin-top:8px;"></p>
+        <input id="post-title" type="text" placeholder="标题" style="width:60%;padding:8px;margin-bottom:8px;"><br>
+        <textarea id="post-content" rows="4" placeholder="内容" style="width:60%;padding:8px;"></textarea><br>
+        <button id="btn-post">发布</button>
+        <p id="post-msg" style="color:red;"></p>
         <hr style="margin:20px 0;">
       </div>
 
       <!-- 帖子列表 -->
-      <div id="posts-container" style="max-width:600px; margin:auto;">
-        <p>加载中…</p>
+      <div id="posts-container">
+        <p>加载中...</p>
       </div>
     </section>
   </main>
 
-  <!-- 页脚 -->
   <footer class="footer">
     <p>© 2025 杭州鋆赫财税咨询有限公司</p>
   </footer>
 
-  <!-- 切换移动导航 -->
   <script>
-    function toggleMobileNav() {
-      const nav = document.getElementById('mobile-nav');
-      nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
-    }
-  </script>
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2NubndoaWQiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc0Nzk3NjI2MSwiZXhwIjoyMDYzNTUyMjYxfQ.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  <!-- 论坛逻辑 -->
-  <script type="module">
-    import { supabase } from './supabase.js';
+    const navActions = document.getElementById('nav-actions');
+    const postArea   = document.getElementById('post-area');
+    const postsCont  = document.getElementById('posts-container');
 
-    const navActions   = document.getElementById('nav-actions');
-    const postArea     = document.getElementById('post-area');
-    const postsContainer = document.getElementById('posts-container');
-    const btnPost      = document.getElementById('btn-post');
-    const postMsg      = document.getElementById('post-msg');
-
-    // 渲染导航登录状态
+    // 渲染顶部登录/用户按钮
     async function renderNav() {
       const { data: { user } } = await supabase.auth.getUser();
-      navActions.innerHTML = user
-        ? `<span style="color:#fff;">${user.email}</span>
-           <button id="btn-logout" style="background:transparent;border:1px solid #fff;color:#fff;padding:4px 8px;border-radius:4px;">退出</button>`
-        : `<a href="login.html">登录</a> <a href="signup.html">注册</a>`;
+      navActions.innerHTML = '';
       if (user) {
+        // 已登录
+        navActions.insertAdjacentHTML('beforeend', 
+          `<span style="color:#fff;margin-right:12px;">${user.email}</span>
+           <button id="btn-logout">退出</button>`
+        );
         document.getElementById('btn-logout').onclick = async () => {
           await supabase.auth.signOut();
           renderNav();
@@ -102,6 +78,11 @@
         };
         postArea.style.display = 'block';
       } else {
+        // 未登录
+        navActions.insertAdjacentHTML('beforeend', 
+          `<a href="login.html">登录</a>
+           <a href="signup.html">注册</a>`
+        );
         postArea.style.display = 'none';
       }
     }
@@ -113,42 +94,41 @@
         .select('*')
         .order('created_at', { ascending: false });
       if (error) {
-        postsContainer.innerHTML = '<p>加载失败，请重试。</p>';
+        postsCont.innerHTML = '<p>加载失败，请刷新重试。</p>';
         return;
       }
       if (!posts.length) {
-        postsContainer.innerHTML = '<p>暂无帖子。</p>';
+        postsCont.innerHTML = '<p>暂无帖子，快来发第一帖吧！</p>';
         return;
       }
-      postsContainer.innerHTML = '';
+      postsCont.innerHTML = '';
       posts.forEach(post => {
         const div = document.createElement('div');
-        div.style.borderBottom = '1px solid #ddd';
-        div.style.padding = '10px 0';
+        div.className = 'post-item';
         div.innerHTML = `
           <h3>${post.title}</h3>
           <p>${post.content}</p>
-          <small>${new Date(post.created_at).toLocaleString()}</small>
+          <small>发表于 ${new Date(post.created_at).toLocaleString()}</small>
         `;
-        postsContainer.appendChild(div);
+        postsCont.appendChild(div);
       });
     }
 
-    // 发布新帖
-    btnPost.onclick = async () => {
-      const title   = document.getElementById('post-title').value.trim();
+    // 发布帖子
+    document.getElementById('btn-post').onclick = async () => {
+      const title = document.getElementById('post-title').value.trim();
       const content = document.getElementById('post-content').value.trim();
       if (!title || !content) {
-        postMsg.textContent = '标题和内容不能为空';
+        document.getElementById('post-msg').textContent = '标题和内容不能为空';
         return;
       }
       const { error } = await supabase
         .from('posts')
         .insert([{ title, content }]);
       if (error) {
-        postMsg.textContent = '发布失败：' + error.message;
+        document.getElementById('post-msg').textContent = '发布失败：' + error.message;
       } else {
-        postMsg.textContent = '';
+        document.getElementById('post-msg').textContent = '';
         document.getElementById('post-title').value = '';
         document.getElementById('post-content').value = '';
         loadPosts();
