@@ -1,33 +1,56 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <title>鋆赫财税</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>鋆赫财税 - 首页</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <img src="logo.png" alt="鋆赫财税 Logo" class="logo">
-    <nav>
-      <ul class="menu">
-        <li><a href="#">服务</a>
-          <ul>
-            <li><a href="services.html">服务项目</a></li>
-            <li><a href="knowledge.html">知识库</a></li>
+    <div class="logo">
+      <img src="https://w1nter998.github.io/logo.png" alt="鋆赫财税 Logo" />
+      <span>鋆赫财税</span>
+    </div>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="index.html">首页</a></li>
+        <li class="has-submenu">关于我们
+          <ul class="submenu">
+            <li><a href="about.html">公司简介</a></li>
           </ul>
         </li>
-        <li><a href="news.html">热点</a></li>
-        <li><a href="forum.html">论坛</a></li>
+        <li class="has-submenu">服务内容
+          <ul class="submenu">
+            <li><a href="services.html">服务项目</a></li>
+          </ul>
+        </li>
+        <li class="has-submenu">分享
+          <ul class="submenu">
+            <li><a href="knowledge.html">知识分享</a></li>
+            <li><a href="news.html">热点新闻</a></li>
+          </ul>
+        </li>
+        <li><a href="contact.html">联系我们</a></li>
       </ul>
     </nav>
-    <div class="top-right">
-      <a href="login.html" class="btn">登录</a>
-      <a href="contact.html" class="btn">联系我们</a>
+    <div class="header-actions">
+      <button onclick="window.location.href='login.html'">登录</button>
     </div>
   </header>
+
   <main>
-    <h1>欢迎来到鋆赫财税</h1>
-    <p>专注于财税咨询与知识服务。</p>
+    <section class="hero">
+      <h1>欢迎来到鋆赫财税</h1>
+      <p>专业 · 稳健 · 值得信赖</p>
+    </section>
   </main>
+
+  <footer>
+    <p>&copy; 2025 鋆赫财税. All rights reserved.</p>
+    <img src="https://w1nter998.github.io/qrcode.png" alt="微信二维码" class="wechat-qrcode" />
+  </footer>
+
+  <script src="//code.tidio.co/zh8fcbtdmmsx2ep5nbj3q2ito5do5rhs.js" async></script>
 </body>
 </html>
