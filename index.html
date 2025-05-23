@@ -1,204 +1,196 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>鋆赫财税 - 官方网站</title>
+  <title>鋆赫财税</title>
   <style>
-    body {
-      margin: 0;
-      font-family: "Microsoft YaHei", sans-serif;
-      color: #333;
-      background-color: #f7f9fb;
-    }
+    /* ======= 重置基础样式 ======= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: "Helvetica Neue", sans-serif; line-height: 1.6; }
 
-    header.top-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      background-color: #ffffff;
+    /* ======= 顶部导航 ======= */
+    header {
+      background-color: #002f6c;
+      color: white;
       padding: 10px 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
 
-    .nav-left {
+    .logo-container {
       display: flex;
       align-items: center;
     }
 
-    .logo {
-      height: 50px;
-      margin-right: 30px;
+    .logo-container img {
+      height: 60px; /* 放大 LOGO */
+      margin-right: 10px;
     }
 
-    .main-menu ul {
+    .navbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .navbar ul {
       list-style: none;
       display: flex;
-      gap: 30px;
-      margin: 0;
-      padding: 0;
+      gap: 20px;
     }
 
-    .main-menu ul li {
+    .navbar li {
       position: relative;
-      padding: 10px;
-      cursor: pointer;
     }
 
-    .main-menu ul li a {
+    .navbar a {
       text-decoration: none;
-      color: #333;
+      color: white;
+      font-weight: bold;
     }
 
-    .submenu {
+    .dropdown-menu {
+      display: none;
       position: absolute;
       top: 100%;
-      left: 0;
       background: white;
-      display: none;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      min-width: 160px;
-      z-index: 100;
+      padding: 10px;
+      color: black;
+      min-width: 120px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
-    .main-menu ul li:hover .submenu {
+    .dropdown:hover .dropdown-menu {
       display: block;
     }
 
-    .submenu li {
-      padding: 10px 20px;
-      white-space: nowrap;
+    .dropdown-menu a {
+      display: block;
+      padding: 5px 0;
+      color: #333;
     }
 
-    .nav-right {
+    .navbar-right {
       display: flex;
-      gap: 20px;
-      align-items: center;
+      gap: 10px;
     }
 
-    .nav-right a {
-      text-decoration: none;
-      color: #0070c9;
-    }
-
-    .content {
+    /* ======= 内容区域 ======= */
+    main {
       padding: 40px 20px;
-      max-width: 1200px;
-      margin: 0 auto;
+      text-align: center;
     }
 
-    .section {
+    .qrcode {
+      margin-top: 40px;
+    }
+
+    .qrcode img {
+      width: 160px; /* 缩小二维码 */
+    }
+
+    /* ======= 移动端导航优化 ======= */
+    .menu-toggle {
+      display: none;
       background: #fff;
-      padding: 30px;
-      margin-bottom: 30px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-      border-radius: 8px;
-    }
-
-    .wechat {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: white;
-      border: 1px solid #ccc;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      max-width: 120px;
-    }
-
-    .wechat img {
-      width: 100%;
-      height: auto;
+      border: none;
+      font-size: 26px;
+      cursor: pointer;
     }
 
     @media (max-width: 768px) {
-      .main-menu ul {
+      .navbar ul {
+        display: none;
         flex-direction: column;
-        gap: 10px;
-      }
-
-      .nav-right {
-        flex-direction: column;
-        align-items: flex-end;
-      }
-
-      .logo {
-        height: 40px;
-      }
-
-      .content {
+        width: 100%;
+        background: #004080;
         padding: 10px;
+      }
+
+      .navbar ul.active {
+        display: flex;
+      }
+
+      .dropdown:hover .dropdown-menu {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+        color: #fff;
+      }
+
+      .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        background: #e0e0e0;
       }
     }
   </style>
-  <script src="//code.tidio.co/zh8fcbtdmmsx2ep5nbj3q2ito5do5rhs.js" async></script>
 </head>
 <body>
-  <header class="top-nav">
-    <div class="nav-left">
-      <img src="https://w1nter998.github.io/logo.png" alt="鋆赫财税 Logo" class="logo" />
-      <nav class="main-menu">
-        <ul>
-          <li>
-            服务领域
-            <ul class="submenu">
-              <li><a href="#">工商登记</a></li>
-              <li><a href="#">代理记账</a></li>
-              <li><a href="#">税务筹划</a></li>
-            </ul>
-          </li>
-          <li>
-            关于我们
-            <ul class="submenu">
-              <li><a href="#">公司简介</a></li>
-              <li><a href="#">企业文化</a></li>
-            </ul>
-          </li>
-          <li>
-            资源中心
-            <ul class="submenu">
-              <li><a href="#">政策法规</a></li>
-              <li><a href="#">知识分享</a></li>
-              <li><a href="#">热点新闻</a></li>
-              <li><a href="#">客户社区</a></li>
-            </ul>
-          </li>
-        </ul>
-      </nav>
+
+  <!-- 顶部区域包含 LOGO 和菜单 -->
+  <header>
+    <div class="logo-container">
+      <img src="https://w1nter998.github.io/logo.png" alt="鋆赫财税 Logo" />
     </div>
-    <div class="nav-right">
+
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+    <nav class="navbar">
+      <ul class="navbar-menu">
+        <li class="dropdown">
+          <a href="#">服务</a>
+          <div class="dropdown-menu">
+            <a href="#">工商设立</a>
+            <a href="#">财税代理</a>
+            <a href="#">税务筹划</a>
+            <a href="#">审计服务</a>
+          </div>
+        </li>
+        <li class="dropdown">
+          <a href="#">分享</a>
+          <div class="dropdown-menu">
+            <a href="#">知识文章</a>
+            <a href="#">案例故事</a>
+            <a href="#">客户常见问题</a>
+          </div>
+        </li>
+        <li><a href="#">关于我们</a></li>
+      </ul>
+    </nav>
+
+    <div class="navbar-right">
       <a href="#">登录</a>
       <a href="#">联系我们</a>
-      <select>
-        <option>简体中文</option>
-        <option>English</option>
-      </select>
+      <a href="#">EN | 中</a>
     </div>
   </header>
 
-  <div class="content">
-    <div class="section">
-      <h2>欢迎访问鋆赫财税</h2>
-      <p>我们专注于企业财税服务，致力于提供高效、专业、可信赖的解决方案。</p>
-    </div>
-    <div class="section">
-      <h3>最新分享</h3>
-      <ul>
-        <li><a href="#">小规模纳税人 VS 一般纳税人区别详解</a></li>
-        <li><a href="#">2025最新个税政策整理</a></li>
-        <li><a href="#">如何选择合适的代理记账公司？</a></li>
-      </ul>
-    </div>
-  </div>
+  <!-- 页面主体内容区域 -->
+  <main>
+    <h1>欢迎来到鋆赫财税</h1>
+    <p>我们专注于企业注册、财税代理、合规审计、税筹服务。</p>
 
-  <div class="wechat">
-    <img src="https://w1nter998.github.io/qrcode.png" alt="微信二维码" />
-  </div>
+    <div class="qrcode">
+      <p>微信扫码咨询</p>
+      <img src="https://w1nter998.github.io/qrcode.png" alt="微信二维码" />
+    </div>
+  </main>
+
+  <!-- Tidio 实时聊天插件 -->
+  <script src="//code.tidio.co/zh8fcbtdmmsx2ep5nbj3q2ito5do5rhs.js" async></script>
+
+  <!-- 移动端菜单切换脚本 -->
+  <script>
+    function toggleMenu() {
+      document.querySelector('.navbar-menu').classList.toggle('active');
+    }
+  </script>
+
 </body>
 </html>
