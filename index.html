@@ -1,132 +1,206 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>鋆赫财税 · 官方网站</title>
+  <meta charset="UTF-8" />
+  <title>鋆赫财税 - 杭州鋆赫财税咨询有限公司</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    /* 全局样式 */
     body {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-      color: #333;
+      font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+      background-color: #f8f8f8;
     }
-    header {
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    header.top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ffffff;
+      padding: 10px 30px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-left {
       display: flex;
       align-items: center;
-      padding: 20px 40px;
-      background-color: #ffffff;
-      border-bottom: 1px solid #e5e5e5;
     }
-    header img.logo {
-      height: 60px;
+
+    .logo {
+      height: 50px;
       margin-right: 20px;
     }
-    header h1 {
-      font-size: 24px;
-      margin: 0;
-      color: #1a1a1a;
-    }
-    .intro {
-      padding: 40px;
-      text-align: center;
-      background-color: #fff;
-    }
-    .intro h2 {
-      font-size: 22px;
-      color: #444;
-    }
-    .services {
+
+    .main-menu ul {
+      list-style: none;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 40px 20px;
-      background-color: #f1f1f1;
+      gap: 30px;
     }
-    .service-box {
-      width: 260px;
+
+    .main-menu ul li {
+      position: relative;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .submenu {
+      position: absolute;
+      top: 100%;
+      left: 0;
       background: white;
-      border-radius: 8px;
-      padding: 20px;
-      margin: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      display: none;
+      flex-direction: column;
+      min-width: 150px;
     }
-    .service-box h3 {
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: #2b2b2b;
+
+    .main-menu ul li:hover .submenu {
+      display: flex;
     }
-    .service-box p {
-      font-size: 14px;
-      color: #666;
+
+    .submenu li {
+      padding: 10px 20px;
     }
-    footer {
+
+    .submenu li:hover {
+      background-color: #f0f0f0;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-right select {
+      padding: 5px;
+    }
+
+    .content {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      margin-bottom: 60px;
+    }
+
+    .section h2 {
+      color: #333;
+      border-left: 4px solid #0066cc;
+      padding-left: 10px;
+    }
+
+    .footer {
+      background-color: #222;
+      color: #ccc;
       text-align: center;
       padding: 20px;
-      background-color: #ffffff;
-      border-top: 1px solid #ddd;
     }
-    footer img {
-      height: 100px;
-      margin-top: 10px;
+
+    .wechat {
+      text-align: center;
+      margin-top: 30px;
     }
-    @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        text-align: center;
-      }
-      header img.logo {
-        height: 50px;
-        margin-bottom: 10px;
-      }
-      .service-box {
-        width: 90%;
-      }
-      footer img {
-        height: 80px;
-      }
+
+    .wechat img {
+      height: 120px;
     }
   </style>
 </head>
 <body>
 
-<header>
-  <img src="https://w1nter998.github.io/logo.png" alt="鋆赫财税 Logo" class="logo">
-  <h1>鋆赫财税</h1>
-</header>
+  <!-- 顶部导航栏区域（Logo + 菜单 + 登录） -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <img src="https://w1nter998.github.io/logo.png" alt="鋆赫财税 Logo" class="logo" />
+      <nav class="main-menu">
+        <ul>
+          <li>
+            服务领域
+            <ul class="submenu">
+              <li><a href="#">工商登记</a></li>
+              <li><a href="#">代理记账</a></li>
+              <li><a href="#">税务筹划</a></li>
+            </ul>
+          </li>
+          <li>
+            关于我们
+            <ul class="submenu">
+              <li><a href="#">公司简介</a></li>
+              <li><a href="#">企业文化</a></li>
+            </ul>
+          </li>
+          <li>
+            资源中心
+            <ul class="submenu">
+              <li><a href="#">政策法规</a></li>
+              <li><a href="#">知识分享</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="nav-right">
+      <a href="#">登录</a>
+      <a href="#">联系我们</a>
+      <select>
+        <option>简体中文</option>
+        <option>English</option>
+      </select>
+    </div>
+  </header>
+  <!-- ✅ 顶部导航栏结束 -->
 
-<div class="intro">
-  <h2>专注于中小企业的财税健康，我们始终如一</h2>
-  <p>注册公司 · 财税合规 · 税务风险提示 · 个税规划 · 记账报税 · 政策解读</p>
-</div>
+  <!-- 页面主体内容区域 -->
+  <main class="content">
 
-<div class="services">
-  <div class="service-box">
-    <h3>开业起步指导</h3>
-    <p>从公司注册到税务登记，帮你迈好第一步。</p>
-  </div>
-  <div class="service-box">
-    <h3>账务整理与合规</h3>
-    <p>日常做账报税、清晰明了，守好企业底线。</p>
-  </div>
-  <div class="service-box">
-    <h3>政策解析 · 风控提醒</h3>
-    <p>及时传达财税政策，预警违规风险。</p>
-  </div>
-  <div class="service-box">
-    <h3>个税优化建议</h3>
-    <p>合理筹划，减轻个税负担。</p>
-  </div>
-</div>
+    <!-- 公司简介 -->
+    <section class="section">
+      <h2>关于鋆赫财税</h2>
+      <p>杭州鋆赫财税咨询有限公司专注于中小企业财税服务，提供公司注册、代理记账、税务筹划、审计服务等专业解决方案，助力企业合规成长。</p>
+    </section>
+    <!-- ✅ 公司简介结束 -->
 
-<footer>
-  <p>扫码咨询 · 微信客服</p>
-  <img src="https://w1nter998.github.io/qrcode.png" alt="微信二维码">
-</footer>
+    <!-- 服务内容 -->
+    <section class="section">
+      <h2>服务项目</h2>
+      <ul>
+        <li>企业注册与工商变更</li>
+        <li>日常账务处理与财务报表</li>
+        <li>专项税收优化建议</li>
+        <li>个税申报与薪酬外包</li>
+      </ul>
+    </section>
+    <!-- ✅ 服务介绍结束 -->
 
-<!-- Tidio 聊天插件 -->
-<script src="//code.tidio.co/zh8fcbtdmmsx2ep5nbj3q2ito5do5rhs.js" async></script>
+    <!-- 微信二维码区域 -->
+    <div class="wechat">
+      <p>微信扫码咨询：</p>
+      <img src="https://w1nter998.github.io/qrcode.png" alt="微信二维码" />
+    </div>
+    <!-- ✅ 微信二维码结束 -->
+
+  </main>
+
+  <!-- 页面底部 -->
+  <footer class="footer">
+    &copy; 2025 杭州鋆赫财税咨询有限公司. 保留所有权利。
+  </footer>
+  <!-- ✅ 页面底部结束 -->
+
+  <!-- Tidio 实时聊天插件 -->
+  <script src="//code.tidio.co/zh8fcbtdmmsx2ep5nbj3q2ito5do5rhs.js" async></script>
+  <!-- ✅ Tidio 聊天插件结束 -->
 
 </body>
 </html>
