@@ -1,107 +1,132 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>鋆赫财税 | 官方网站</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鋆赫财税 · 官方网站</title>
   <style>
     body {
-      font-family: "Microsoft YaHei", sans-serif;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       margin: 0;
-      background: #f4f6f9;
+      padding: 0;
+      background-color: #f9f9f9;
       color: #333;
     }
     header {
-      background: #1d3e75;
-      color: white;
-      padding: 30px 20px;
+      display: flex;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    header img.logo {
+      height: 60px;
+      margin-right: 20px;
+    }
+    header h1 {
+      font-size: 24px;
+      margin: 0;
+      color: #1a1a1a;
+    }
+    .intro {
+      padding: 40px;
       text-align: center;
+      background-color: #fff;
     }
-    header img {
-      height: 80px;
-      display: block;
-      margin: 0 auto 10px;
+    .intro h2 {
+      font-size: 22px;
+      color: #444;
     }
-    header .logo-text {
-      font-size: 18px;
-      font-weight: bold;
-    }
-    section {
+    .services {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       padding: 40px 20px;
-      max-width: 960px;
-      margin: 20px auto;
+      background-color: #f1f1f1;
+    }
+    .service-box {
+      width: 260px;
       background: white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       border-radius: 8px;
+      padding: 20px;
+      margin: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
     }
-    h2 {
-      color: #1d3e75;
-      margin-top: 0;
+    .service-box h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #2b2b2b;
     }
-    .services ul {
-      padding-left: 20px;
-    }
-    .qr {
-      text-align: center;
-    }
-    .qr img {
-      max-width: 200px;
-      margin-top: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
+    .service-box p {
+      font-size: 14px;
+      color: #666;
     }
     footer {
       text-align: center;
       padding: 20px;
-      font-size: 14px;
-      color: #888;
-      margin-top: 40px;
+      background-color: #ffffff;
+      border-top: 1px solid #ddd;
+    }
+    footer img {
+      height: 100px;
+      margin-top: 10px;
     }
     @media (max-width: 600px) {
-      header img {
-        height: 60px;
+      header {
+        flex-direction: column;
+        text-align: center;
       }
-      section {
-        padding: 20px 15px;
+      header img.logo {
+        height: 50px;
+        margin-bottom: 10px;
+      }
+      .service-box {
+        width: 90%;
+      }
+      footer img {
+        height: 80px;
       }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <img src="https://w1nter998.github.io/logo.png" alt="鋆赫财税 Logo">
-    <div class="logo-text">杭州鋆赫财税咨询有限公司</div>
-    <p>专注企业财税服务 · 助力创业无忧</p>
-  </header>
+<header>
+  <img src="https://w1nter998.github.io/logo.png" alt="鋆赫财税 Logo" class="logo">
+  <h1>鋆赫财税</h1>
+</header>
 
-  <section>
-    <h2>公司简介</h2>
-    <p>我们是位于杭州的专业财税服务机构，服务涵盖公司注册、代理记账、税务筹划、异常处理等，致力于帮助初创企业和中小企业解决财税难题。</p>
-  </section>
+<div class="intro">
+  <h2>专注于中小企业的财税健康，我们始终如一</h2>
+  <p>注册公司 · 财税合规 · 税务风险提示 · 个税规划 · 记账报税 · 政策解读</p>
+</div>
 
-  <section class="services">
-    <h2>服务项目</h2>
-    <ul>
-      <li>公司注册与变更</li>
-      <li>代理记账 & 税务申报</li>
-      <li>税务异常处理</li>
-      <li>工商年报与审计</li>
-      <li>社保代缴与银行开户</li>
-    </ul>
-  </section>
+<div class="services">
+  <div class="service-box">
+    <h3>开业起步指导</h3>
+    <p>从公司注册到税务登记，帮你迈好第一步。</p>
+  </div>
+  <div class="service-box">
+    <h3>账务整理与合规</h3>
+    <p>日常做账报税、清晰明了，守好企业底线。</p>
+  </div>
+  <div class="service-box">
+    <h3>政策解析 · 风控提醒</h3>
+    <p>及时传达财税政策，预警违规风险。</p>
+  </div>
+  <div class="service-box">
+    <h3>个税优化建议</h3>
+    <p>合理筹划，减轻个税负担。</p>
+  </div>
+</div>
 
-  <section class="qr">
-    <h2>联系我们</h2>
-    <p>扫码添加微信，获取1对1免费咨询服务：</p>
-    <img src="https://w1nter998.github.io/qrcode.png" alt="微信二维码">
-  </section>
+<footer>
+  <p>扫码咨询 · 微信客服</p>
+  <img src="https://w1nter998.github.io/qrcode.png" alt="微信二维码">
+</footer>
 
-  <footer>
-    &copy; 2025 杭州鋆赫财税咨询有限公司 | 版权所有
-  </footer>
+<!-- Tidio 聊天插件 -->
+<script src="//code.tidio.co/zh8fcbtdmmsx2ep5nbj3q2ito5do5rhs.js" async></script>
 
-  <!-- 已接入 Tidio 在线聊天插件 -->
-  <script src="//code.tidio.co/zh8fcbtdmmsx2ep5nbj3q2ito5do5rhs.js" async></script>
 </body>
 </html>
