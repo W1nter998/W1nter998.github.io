@@ -1,93 +1,105 @@
 
+/* Global */
 body {
   margin: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  background: #f5f5f5;
+  font-family: "Microsoft YaHei", sans-serif;
+  background: #f7f7f7;
+  color: #333;
 }
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+
+/* Header */
+header {
   background: #000;
   color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
+
 .logo-area {
   display: flex;
   align-items: center;
 }
-.logo {
+
+.logo-area img {
   height: 50px;
   margin-right: 10px;
 }
-.brand-name {
-  font-size: 20px;
-  font-weight: bold;
-}
-.navbar .menu {
-  display: flex;
+
+nav.main-nav ul {
   list-style: none;
+  display: flex;
   margin: 0;
   padding: 0;
 }
-.navbar .menu > li {
+
+nav.main-nav li {
   position: relative;
   margin-right: 20px;
 }
-.navbar .menu > li > a {
-  color: white;
+
+nav.main-nav a {
+  color: #fff;
   text-decoration: none;
-  padding: 10px;
+  padding: 8px 5px;
+  display: inline-block;
 }
-.submenu {
+
+nav.main-nav li:hover > a {
+  background: #333;
+}
+
+nav.main-nav .submenu {
   display: none;
   position: absolute;
-  top: 40px;
-  background: #333;
-  list-style: none;
-  padding: 0;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+nav.main-nav li:hover .submenu {
+  display: block;
+}
+
+nav.main-nav .submenu li {
   margin: 0;
 }
-.submenu li a {
-  color: white;
-  display: block;
-  padding: 10px;
+
+nav.main-nav .submenu a {
+  color: #333;
+  padding: 8px 15px;
+  white-space: nowrap;
+}
+
+/* Top actions */
+.top-actions a {
+  color: #fff;
   text-decoration: none;
-}
-.dropdown:hover .submenu {
-  display: block;
-}
-.top-actions {
-  display: flex;
-  align-items: center;
-}
-.top-actions a, .top-actions select {
-  color: white;
   margin-left: 15px;
-  text-decoration: none;
+  padding: 6px 12px;
+  border: 1px solid #fff;
+  border-radius: 4px;
 }
-.intro {
+
+.top-actions a:hover {
+  background: #333;
+}
+
+/* Main blank */
+main {
   padding: 40px;
   text-align: center;
 }
-.login-section {
-  max-width: 400px;
-  margin: 0 auto;
+
+/* Footer */
+footer {
+  background: #000;
+  color: #ccc;
   text-align: center;
-}
-.login-section input {
-  display: block;
-  width: 100%;
-  margin: 10px 0;
-  padding: 10px;
-}
-.footer {
-  text-align: center;
-  background: #222;
-  color: #fff;
-  padding: 20px 10px;
-}
-.footer .qrcode {
-  width: 100px;
-  margin-top: 10px;
+  padding: 20px;
 }

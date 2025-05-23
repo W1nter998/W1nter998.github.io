@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>鋆赫财税 - 知识分享</title>
+  <title>鋆赫财税 - 论坛</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -43,7 +43,26 @@
     </div>
   </header>
   <main>
-    <h1>知识分享</h1><p>这里是知识分享内容。</p>
+    <h1>论坛</h1>
+<div id="posts"></div>
+<textarea id="content" placeholder="说点什么..."></textarea><br>
+<button onclick="post()">发布</button>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
+const SUPABASE_KEY = "SUPABASE_CLIENT_API_KEY";
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+async function loadPosts() {
+  let { data } = await supabase.from('posts').select('*').order('created_at',{ascending:false});
+  document.getElementById('posts').innerHTML = data.map(p => `<p>${p.content}</p>`).join('');
+}
+loadPosts();
+async function post() {
+  const c = document.getElementById('content').value;
+  await supabase.from('posts').insert({ content: c });
+  loadPosts();
+}
+</script>
   </main>
   <footer>
     © 2025 杭州鋆赫财税咨询有限公司

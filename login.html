@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>鋆赫财税 - 知识分享</title>
+  <title>鋆赫财税 - 登录</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -43,7 +43,27 @@
     </div>
   </header>
   <main>
-    <h1>知识分享</h1><p>这里是知识分享内容。</p>
+    <h1>登录</h1>
+<input type="email" id="email" placeholder="邮箱"><br>
+<input type="password" id="password" placeholder="密码"><br>
+<input type="text" id="invite" placeholder="邀请码"><br>
+<button onclick="signUpLogin()">提交</button>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
+const SUPABASE_KEY = "SUPABASE_CLIENT_API_KEY";
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+async function signUpLogin() {
+  const e = document.getElementById('email').value;
+  const p = document.getElementById('password').value;
+  const code = document.getElementById('invite').value;
+  // 验证邀请码逻辑
+  if (!code) return alert('请输入邀请码');
+  const { data: u, error } = await supabase.auth.signUp({ email: e, password: p });
+  if (error) return alert(error.message);
+  alert('请激活邮箱');
+}
+</script>
   </main>
   <footer>
     © 2025 杭州鋆赫财税咨询有限公司
