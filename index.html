@@ -1,83 +1,67 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>鋆赫财税</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-    header {
-      background-color: #000;
-      color: white;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .logo img {
-      height: 40px;
-    }
-    nav {
-      display: flex;
-      gap: 2rem;
-    }
-    nav > div {
-      position: relative;
-    }
-    .submenu {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: white;
-      color: black;
-      border: 1px solid #ccc;
-      padding: 0.5rem 1rem;
-      white-space: nowrap;
-    }
-    nav > div:hover .submenu {
-      display: block;
-    }
-    .submenu a {
-      display: block;
-      padding: 0.5rem 0;
-      text-decoration: none;
-      color: black;
-    }
-    .submenu a:hover {
-      background-color: #f0f0f0;
-    }
-  </style>
+  <title>鋆赫财税 - 登录系统</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <img src="logo.png" alt="鋆赫财税 Logo" />
-    </div>
-    <nav>
-      <div>
-        关于我们
-        <div class="submenu">
-          <a href="about.html">公司简介</a>
-        </div>
-      </div>
-      <div>
-        服务内容
-        <div class="submenu">
-          <a href="services.html">服务范围</a>
-        </div>
-      </div>
-      <div>
-        分享
-        <div class="submenu">
-          <a href="news.html">热点资讯</a>
-          <a href="knowledge.html">知识分享</a>
-        </div>
-      </div>
+  <header class="top-header">
+    <div class="logo"><img src="https://w1nter998.github.io/logo.png" alt="鋆赫财税 Logo" /></div>
+    <nav class="main-nav">
+      <ul>
+        <li><a href="#">首页</a></li>
+        <li><a href="#">服务</a></li>
+        <li><a href="#">分享</a></li>
+        <li><a href="#">论坛</a></li>
+      </ul>
     </nav>
+    <div class="top-right">
+      <a href="#" id="login">登录</a> |
+      <a href="#">联系我们</a> |
+      <select id="language"><option>中文</option><option>English</option></select>
+    </div>
   </header>
+  <main>
+    <section id="auth">
+      <h2>登录 / 注册</h2>
+      <input type="email" id="email" placeholder="邮箱" />
+      <input type="password" id="password" placeholder="密码" />
+      <input type="text" id="invite" placeholder="邀请码（注册必填）" />
+      <button onclick="login()">登录</button>
+      <button onclick="signUp()">注册</button>
+    </section>
+  </main>
+  <script>
+    const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
+    const SUPABASE_KEY = "SUPABASE_CLIENT_API_KEY"; // 替换为你的 key
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function login() {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+      });
+      if (error) alert("登录失败：" + error.message);
+      else alert("登录成功！");
+    }
+
+    async function signUp() {
+      const inviteCode = document.getElementById("invite").value.trim();
+      if (inviteCode !== "YOUR_INVITE_CODE") {
+        alert("无效的邀请码");
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signUp({
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value
+      });
+      if (error) alert("注册失败：" + error.message);
+      else alert("注册成功！");
+    }
+  </script>
 </body>
 </html>
