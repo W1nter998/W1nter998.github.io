@@ -5,51 +5,26 @@
   <title>论坛 · 鋆赫论坛</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <script type="module" src="supabase.js"></script>
 </head>
 <body>
-  <header class="header">
-    <div class="logo">
-      <a href="index.html">
-        <img src="logo.png" alt="鋆赫财税 Logo">
-      </a>
-      <span>鋆赫财税</span>
-    </div>
-    <nav class="navbar">
+  <header>
+    <div class="logo"><a href="index.html"><img src="logo.png" alt="鋆赫财税 Logo"></a><span>鋆赫论坛</span></div>
+    <nav>
       <ul class="nav-main">
         <li><a href="index.html">首页</a></li>
-        <li class="dropdown">
-          <a href="about.html">关于我们</a>
-          <ul class="dropdown-menu">
-            <li><a href="about.html">公司介绍</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="knowledge.html">知识分享</a>
-          <ul class="dropdown-menu">
-            <li><a href="knowledge.html">财税知识</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="services.html">服务范围</a>
-          <ul class="dropdown-menu">
-            <li><a href="services.html">服务清单</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="news.html">热点新闻</a>
-          <ul class="dropdown-menu">
-            <li><a href="news.html">行业资讯</a></li>
-          </ul>
-        </li>
+        <li><a href="about.html">关于</a></li>
+        <li><a href="services.html">服务</a></li>
+        <li><a href="knowledge.html">知识</a></li>
+        <li><a href="news.html">新闻</a></li>
         <li><a class="active" href="forum.html">论坛</a></li>
       </ul>
       <div class="nav-actions" id="nav-actions">
-        <a href="contact.html">联系我们</a>
-        <a href="login.html">登录</a>
-        <select class="lang-switcher">
-          <option>简体中文</option>
-          <option>English</option>
-        </select>
+        </div>
+      <div class="hamburger-menu" id="hamburger-menu">
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
     </nav>
   </header>
@@ -60,14 +35,15 @@
 
       <div id="post-area" style="display:none;margin:20px 0;">
         <h2>发布新帖</h2>
-        <input id="post-title" type="text" placeholder="标题" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ddd;border-radius:4px;">
-        <textarea id="post-content" placeholder="内容" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ddd;border-radius:4px;min-height:100px;"></textarea>
-        <button id="btn-post" style="padding:10px 20px;background-color:#007bff;color:#fff;border:none;border-radius:4px;cursor:pointer;">发布</button>
-        <p id="post-msg" style="color:red;margin-top:10px;"></p>
+        <input id="post-title" type="text" placeholder="标题" class="form-input" />
+        <textarea id="post-content" placeholder="内容" rows="5" class="form-input"></textarea>
+        <button id="btn-post" class="form-button">发布</button>
+        <p id="post-msg" class="form-message"></p>
       </div>
 
-      <div id="posts-container" style="margin-top:20px;">
-        </div>
+      <div id="posts-container">
+        <p>正在加载帖子...</p>
+      </div>
     </section>
   </main>
 
@@ -75,62 +51,51 @@
     <p>© 2025 杭州鋆赫财税咨询有限公司</p>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  <script type="module">
+    import { supabase, renderNavActions } from './supabase.js';
 
-    const navActions = document.getElementById('nav-actions');
-    const postArea = document.getElementById('post-area');
+    document.addEventListener('DOMContentLoaded', async () => {
+      await renderNavActions(); // 确保导航栏渲染完毕
+
+      // 检查用户登录状态并显示/隐藏发帖区
+      const { data: { user } } = await supabase.auth.getUser();
+      const postArea = document.getElementById('post-area');
+      if (user) {
+        postArea.style.display = 'block';
+      } else {
+        postArea.style.display = 'none';
+      }
+
+      loadPosts(); // 加载帖子
+
+      // 监听认证状态变化，动态显示发帖区
+      supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN') {
+          postArea.style.display = 'block';
+        } else if (event === 'SIGNED_OUT') {
+          postArea.style.display = 'none';
+        }
+      });
+    });
+
     const postsCont = document.getElementById('posts-container');
 
-    // 渲染顶部登录状态
-    async function renderNav() {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      // Clear existing content except for contact, login, and language switcher
-      navActions.querySelector('.lang-switcher').remove();
-      navActions.querySelector('a[href="login.html"]').remove();
-      navActions.querySelector('a[href="contact.html"]').remove();
-
-      if (user) {
-        // Logged in
-        navActions.insertAdjacentHTML('afterbegin', 
-          `<span style="color:#fff;margin-right:12px;">${user.email}</span>
-           <button id="btn-logout" style="margin-right:12px;">退出</button>`
-        );
-        document.getElementById('btn-logout').onclick = async () => {
-          await supabase.auth.signOut();
-          renderNav();
-          postArea.style.display = 'none'; // Hide post area on logout
-        };
-        postArea.style.display = 'block'; // Show post area if logged in
-      } else {
-        // Not logged in
-        navActions.insertAdjacentHTML('afterbegin', 
-          `<a href="register.html" style="margin-right:12px;">注册</a>
-           <a href="login.html" style="margin-right:12px;">登录</a>`
-        );
-        postArea.style.display = 'none'; // Hide post area if not logged in
-      }
-    }
-
-    // 加载论坛帖子
+    // 加载帖子
     async function loadPosts() {
       const { data: posts, error } = await supabase
-        .from('forum_posts') // Changed table name to 'forum_posts' for clarity
+        .from('posts')
         .select('*')
         .order('created_at', { ascending: false });
+
       if (error) {
-        postsCont.innerHTML = '<p>加载失败，请刷新重试。</p>';
+        postsCont.innerHTML = '<p class="form-message">加载失败，请刷新重试。</p>';
         return;
       }
       if (!posts.length) {
         postsCont.innerHTML = '<p>暂无帖子，快来发第一帖吧！</p>';
         return;
       }
-      postsCont.innerHTML = '';
+      postsCont.innerHTML = ''; // 清空加载提示
       posts.forEach(post => {
         const div = document.createElement('div');
         div.className = 'post-item';
@@ -147,33 +112,27 @@
     document.getElementById('btn-post').onclick = async () => {
       const title = document.getElementById('post-title').value.trim();
       const content = document.getElementById('post-content').value.trim();
-      if (!title || !content) {
-        document.getElementById('post-msg').textContent = '标题和内容不能为空';
-        return;
-      }
+      const postMsg = document.getElementById('post-msg');
 
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        document.getElementById('post-msg').textContent = '请先登录才能发布帖子。';
+      if (!title || !content) {
+        postMsg.textContent = '标题和内容不能为空';
         return;
       }
 
       const { error } = await supabase
-        .from('forum_posts') // Changed table name
-        .insert([{ title, content, user_id: user.id, user_email: user.email }]); // Added user_id and user_email
+        .from('posts')
+        .insert([{ title, content }]);
+
       if (error) {
-        document.getElementById('post-msg').textContent = '发布失败：' + error.message;
+        postMsg.textContent = '发布失败：' + error.message;
       } else {
-        document.getElementById('post-msg').textContent = '';
+        postMsg.textContent = '帖子发布成功！';
         document.getElementById('post-title').value = '';
         document.getElementById('post-content').value = '';
-        loadPosts(); // Reload posts after successful submission
+        loadPosts(); // 重新加载帖子以显示新发布的
+        setTimeout(() => { postMsg.textContent = ''; }, 3000); // 3秒后清除消息
       }
     };
-
-    // 初始化加载
-    renderNav();
-    loadPosts();
   </script>
 </body>
 </html>

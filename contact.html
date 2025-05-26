@@ -2,54 +2,31 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>联系我们 · 鋆赫财税</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <script type="module" src="supabase.js"></script>
 </head>
 <body>
-  <header class="header">
+  <header>
     <div class="logo">
-      <a href="index.html">
-        <img src="logo.png" alt="鋆赫财税 Logo">
-      </a>
+      <a href="index.html"><img src="logo.png" alt="鋆赫财税 Logo"></a>
       <span>鋆赫财税</span>
     </div>
-    <nav class="navbar">
+    <nav>
       <ul class="nav-main">
         <li><a href="index.html">首页</a></li>
-        <li class="dropdown">
-          <a href="about.html">关于我们</a>
-          <ul class="dropdown-menu">
-            <li><a href="about.html">公司介绍</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="knowledge.html">知识分享</a>
-          <ul class="dropdown-menu">
-            <li><a href="knowledge.html">财税知识</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="services.html">服务范围</a>
-          <ul class="dropdown-menu">
-            <li><a href="services.html">服务清单</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="news.html">热点新闻</a>
-          <ul class="dropdown-menu">
-            <li><a href="news.html">行业资讯</a></li>
-          </ul>
-        </li>
+        <li><a href="about.html">关于</a></li>
+        <li><a href="services.html">服务</a></li>
+        <li><a href="knowledge.html">知识</a></li>
+        <li><a href="news.html">新闻</a></li>
         <li><a href="forum.html">论坛</a></li>
       </ul>
-      <div class="nav-actions" id="nav-actions">
-        <a class="active" href="contact.html">联系我们</a>
-        <a href="login.html">登录</a>
-        <select class="lang-switcher">
-          <option>简体中文</option>
-          <option>English</option>
-        </select>
+      <div class="nav-actions" id="nav-actions"></div>
+      <div class="hamburger-menu" id="hamburger-menu">
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
     </nav>
   </header>
@@ -59,13 +36,13 @@
       <h1>联系我们</h1>
       <p>如果您有任何问题，欢迎通过以下方式联系我们：</p>
       <ul style="text-align:left; display:inline-block; margin-top:20px;">
-        <li>📧 邮箱：support@yunhe-tax.com</li>
-        <li>📞 电话：17395711633</li>
+        <li>📧 邮箱：<a href="mailto:support@yunhe-tax.com">support@yunhe-tax.com</a></li>
+        <li>📞 电话：<a href="tel:+8617395711633">17395711633</a></li>
         <li>🏢 地址：杭州市滨江区西兴街道泽明科创园211</li>
       </ul>
       <div style="margin-top:30px;">
         <p>微信扫码咨询：</p>
-        <img src="qrcode.png" alt="微信二维码" style="width:120px;">
+        <img src="qrcode.png" alt="微信二维码" style="width:120px; height:auto;">
       </div>
     </section>
   </main>
@@ -74,41 +51,5 @@
     <p>© 2025 杭州鋆赫财税咨询有限公司</p>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    async function renderNav() {
-      const { data: { user } } = await supabase.auth.getUser();
-      const navActions = document.getElementById('nav-actions');
-      
-      // Clear existing content except for contact, login, and language switcher
-      navActions.querySelector('.lang-switcher').remove();
-      navActions.querySelector('a[href="login.html"]').remove();
-      navActions.querySelector('a[href="contact.html"]').remove();
-
-      if (user) {
-        // Logged in
-        navActions.insertAdjacentHTML('afterbegin', 
-          `<span style="color:#fff;margin-right:12px;">${user.email}</span>
-           <button id="btn-logout" style="margin-right:12px;">退出</button>`
-        );
-        document.getElementById('btn-logout').onclick = async () => {
-          await supabase.auth.signOut();
-          renderNav();
-        };
-      } else {
-        // Not logged in
-        navActions.insertAdjacentHTML('afterbegin', 
-          `<a href="register.html" style="margin-right:12px;">注册</a>
-           <a href="login.html" style="margin-right:12px;">登录</a>`
-        );
-      }
-    }
-
-    renderNav();
-  </script>
 </body>
 </html>

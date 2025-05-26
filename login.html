@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>登录 - 鋆赫财税</title>
   <link rel="stylesheet" href="style.css" />
+  <script type="module" src="supabase.js"></script>
 </head>
 <body>
   <header class="header">
@@ -18,25 +19,25 @@
       <ul class="nav-main">
         <li><a href="index.html">首页</a></li>
         <li class="dropdown">
-          <a href="about.html">关于我们</a>
+          <a href="#">关于我们</a>
           <ul class="dropdown-menu">
             <li><a href="about.html">公司介绍</a></li>
           </ul>
         </li>
         <li class="dropdown">
-          <a href="knowledge.html">知识分享</a>
+          <a href="#">知识分享</a>
           <ul class="dropdown-menu">
             <li><a href="knowledge.html">财税知识</a></li>
           </ul>
         </li>
         <li class="dropdown">
-          <a href="services.html">服务范围</a>
+          <a href="#">服务范围</a>
           <ul class="dropdown-menu">
             <li><a href="services.html">服务清单</a></li>
           </ul>
         </li>
         <li class="dropdown">
-          <a href="news.html">热点新闻</a>
+          <a href="#">热点新闻</a>
           <ul class="dropdown-menu">
             <li><a href="news.html">行业资讯</a></li>
           </ul>
@@ -44,79 +45,52 @@
         <li><a href="forum.html">论坛</a></li>
       </ul>
       <div class="nav-actions" id="nav-actions">
-        <a href="contact.html">联系我们</a>
-        <a class="active" href="login.html">登录</a>
-        <select class="lang-switcher">
-          <option>简体中文</option>
-          <option>English</option>
-        </select>
+        </div>
+      <div class="hamburger-menu" id="hamburger-menu">
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
     </nav>
   </header>
 
   <main class="main">
-    <div class="intro">
+    <div class="intro form-container">
       <h1>登录鋆赫财税账户</h1>
       <form id="login-form">
-        <label for="email">邮箱</label><br/>
-        <input type="email" id="email" placeholder="邮箱" required /><br/><br/>
-
-        <label for="password">密码</label><br/>
-        <input type="password" id="password" placeholder="密码" required /><br/><br/>
-        
-        <button type="submit" style="padding: 10px 20px;">登录</button>
+        <label for="email">邮箱</label>
+        <input type="email" id="email" placeholder="邮箱" required class="form-input" />
+        <label for="password">密码</label>
+        <input type="password" id="password" placeholder="密码" required class="form-input" />
+        <button type="submit" class="form-button">登录</button>
       </form>
-      <p id="login-message" style="color: red; margin-top: 10px;"></p>
+      <p id="login-message" class="form-message"></p>
     </div>
   </main>
 
   <footer class="footer">
-    <p>© 2025 杭州鋆赫财税咨询有限公司</p>
+    © 2025 鋆赫财税咨询有限公司
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  <script type="module">
+    import { supabase, renderNavActions } from './supabase.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNavActions();
+    });
 
     const loginForm = document.getElementById('login-form');
     const loginMessage = document.getElementById('login-message');
-    const navActions = document.getElementById('nav-actions');
-
-    // 渲染顶部登录状态
-    async function renderNav() {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      // Clear existing content except for contact, login, and language switcher
-      navActions.querySelector('.lang-switcher').remove();
-      navActions.querySelector('a[href="login.html"]').remove();
-      navActions.querySelector('a[href="contact.html"]').remove();
-
-
-      if (user) {
-        // Logged in
-        navActions.insertAdjacentHTML('afterbegin', 
-          `<span style="color:#fff;margin-right:12px;">${user.email}</span>
-           <button id="btn-logout" style="margin-right:12px;">退出</button>`
-        );
-        document.getElementById('btn-logout').onclick = async () => {
-          await supabase.auth.signOut();
-          renderNav();
-        };
-      } else {
-        // Not logged in
-        navActions.insertAdjacentHTML('afterbegin', 
-          `<a href="register.html" style="margin-right:12px;">注册</a>
-           <a href="login.html" style="margin-right:12px;">登录</a>`
-        );
-      }
-    }
 
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
+
+      if (!email || !password) {
+        loginMessage.textContent = '邮箱和密码不能为空。';
+        return;
+      }
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email,
@@ -127,11 +101,11 @@
         loginMessage.textContent = '登录失败: ' + error.message;
       } else {
         loginMessage.textContent = '登录成功！正在跳转...';
-        window.location.href = 'index.html'; // Redirect to home or dashboard
+        console.log('User logged in:', data.user);
+        // 登录成功后，您可以重定向用户到论坛或其他页面
+        window.location.href = 'forum.html';
       }
     });
-
-    renderNav(); // Initial render of navigation
   </script>
 </body>
 </html>

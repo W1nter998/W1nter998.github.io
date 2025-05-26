@@ -2,54 +2,35 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>热点新闻 · 鋆赫财税</title>
+  <title>热点新闻 · 鋆赫论坛</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <script type="module" src="supabase.js"></script>
 </head>
 <body>
-  <header class="header">
+  <header>
     <div class="logo">
-      <a href="index.html">
-        <img src="logo.png" alt="鋆赫财税 Logo">
-      </a>
-      <span>鋆赫财税</span>
+      <a href="index.html"><img src="logo.png" alt="鋆赫财税 Logo"></a>
+      <span>鋆赫论坛</span>
     </div>
-    <nav class="navbar">
+    <nav>
       <ul class="nav-main">
         <li><a href="index.html">首页</a></li>
-        <li class="dropdown">
-          <a href="about.html">关于我们</a>
+        <li><a href="about.html">关于</a></li>
+        <li><a href="services.html">服务</a></li>
+        <li><a href="knowledge.html">知识分享</a></li>
+        <li class="dropdown"><a class="active" href="#">热点新闻</a>
           <ul class="dropdown-menu">
-            <li><a href="about.html">公司介绍</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="knowledge.html">知识分享</a>
-          <ul class="dropdown-menu">
-            <li><a href="knowledge.html">财税知识</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="services.html">服务范围</a>
-          <ul class="dropdown-menu">
-            <li><a href="services.html">服务清单</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a class="active" href="news.html">热点新闻</a>
-          <ul class="dropdown-menu">
-            <li><a href="news.html">行业资讯</a></li>
+            <li><a href="news.html">热点新闻</a></li>
           </ul>
         </li>
         <li><a href="forum.html">论坛</a></li>
       </ul>
-      <div class="nav-actions" id="nav-actions">
-        <a href="contact.html">联系我们</a>
-        <a href="login.html">登录</a>
-        <select class="lang-switcher">
-          <option>简体中文</option>
-          <option>English</option>
-        </select>
+      <div class="nav-actions" id="nav-actions"></div>
+      <div class="hamburger-menu" id="hamburger-menu">
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
     </nav>
   </header>
@@ -57,7 +38,8 @@
   <main class="main">
     <section class="forum-section">
       <h1>热点新闻</h1>
-      <div id="news-container" style="margin-top:20px;">
+      <div id="news-container">
+        <p>正在加载新闻内容...</p>
         </div>
     </section>
   </main>
@@ -66,73 +48,44 @@
     <p>© 2025 杭州鋆赫财税咨询有限公司</p>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  <script type="module">
+    import { supabase, renderNavActions } from './supabase.js';
 
-    const navActions = document.getElementById('nav-actions');
+    document.addEventListener('DOMContentLoaded', () => {
+      renderNavActions(); // 渲染导航栏
+      loadNews();         // 加载新闻内容
+    });
+
     const newsContainer = document.getElementById('news-container');
-
-    // 渲染顶部登录状态
-    async function renderNav() {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      // Clear existing content except for contact, login, and language switcher
-      navActions.querySelector('.lang-switcher').remove();
-      navActions.querySelector('a[href="login.html"]').remove();
-      navActions.querySelector('a[href="contact.html"]').remove();
-
-      if (user) {
-        // Logged in
-        navActions.insertAdjacentHTML('afterbegin', 
-          `<span style="color:#fff;margin-right:12px;">${user.email}</span>
-           <button id="btn-logout" style="margin-right:12px;">退出</button>`
-        );
-        document.getElementById('btn-logout').onclick = async () => {
-          await supabase.auth.signOut();
-          renderNav();
-        };
-      } else {
-        // Not logged in
-        navActions.insertAdjacentHTML('afterbegin', 
-          `<a href="register.html" style="margin-right:12px;">注册</a>
-           <a href="login.html" style="margin-right:12px;">登录</a>`
-        );
-      }
-    }
 
     // 加载新闻类帖子
     async function loadNews() {
       const { data: posts, error } = await supabase
-        .from('forum_posts') // Changed table name to 'forum_posts' for consistency
+        .from('posts')
         .select('*')
-        .order('created_at', { ascending: false }); // Removed category filter for now, assuming all posts are relevant or a filter will be added on the forum
+        .eq('category', 'news') // 假设您在Supabase中有一个'category'字段来区分帖子类型
+        .order('created_at', { ascending: false });
+
       if (error) {
-        newsContainer.innerHTML = '<p>加载失败，请刷新重试。</p>';
+        newsContainer.innerHTML = '<p class="form-message">加载失败，请重试。</p>';
         return;
       }
       if (!posts.length) {
         newsContainer.innerHTML = '<p>暂无新闻动态。</p>';
         return;
       }
-      newsContainer.innerHTML = '';
+      newsContainer.innerHTML = ''; // 清空加载提示
       posts.forEach(p => {
         const div = document.createElement('div');
-        div.className = 'post-item';
+        div.className = 'post-item'; // 复用论坛的样式
         div.innerHTML = `
           <h3>${p.title}</h3>
           <p>${p.content}</p>
-          <small>发表于 ${new Date(p.created_at).toLocaleString()}</small>
+          <small>发布日期: ${new Date(p.created_at).toLocaleDateString()}</small>
         `;
         newsContainer.appendChild(div);
       });
     }
-
-    // 初始化加载
-    renderNav();
-    loadNews();
   </script>
 </body>
 </html>
