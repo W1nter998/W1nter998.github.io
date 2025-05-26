@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>发布新帖 - 鋆赫论坛</title>
+  <title>发布新帖 - 鋆赫财税</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,16 +12,46 @@
       <a href="index.html">
         <img src="logo.png" alt="鋆赫财税 Logo" />
       </a>
-      <span>鋆赫论坛</span>
+      <span>鋆赫财税</span>
     </div>
-    <ul class="nav-actions">
-      <a href="contact.html">联系我们</a>
-      <a href="login.html">登录</a>
-      <select class="lang-switcher">
-        <option>中文</option>
-        <option>EN</option>
-      </select>
-    </ul>
+    <nav class="navbar">
+      <ul class="nav-main">
+        <li><a href="index.html">首页</a></li>
+        <li class="dropdown">
+          <a href="about.html">关于我们</a>
+          <ul class="dropdown-menu">
+            <li><a href="about.html">公司介绍</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="knowledge.html">知识分享</a>
+          <ul class="dropdown-menu">
+            <li><a href="knowledge.html">财税知识</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="services.html">服务范围</a>
+          <ul class="dropdown-menu">
+            <li><a href="services.html">服务清单</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="news.html">热点新闻</a>
+          <ul class="dropdown-menu">
+            <li><a href="news.html">行业资讯</a></li>
+          </ul>
+        </li>
+        <li><a href="forum.html">论坛</a></li>
+      </ul>
+      <div class="nav-actions" id="nav-actions">
+        <a href="contact.html">联系我们</a>
+        <a href="login.html">登录</a>
+        <select class="lang-switcher">
+          <option>简体中文</option>
+          <option>English</option>
+        </select>
+      </div>
+    </nav>
   </header>
 
   <main class="main">
@@ -35,13 +65,13 @@
         <textarea id="content" name="content" rows="10" required></textarea><br/><br/>
 
         <button type="submit">提交</button>
-        <p id="post-status" style="margin-top: 10px;"></p>
+        <p id="post-status" style="margin-top: 10px; color: red;"></p>
       </form>
     </div>
   </main>
 
   <footer class="footer">
-    © 2025 鋆赫财税咨询有限公司
+    <p>© 2025 杭州鋆赫财税咨询有限公司</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -52,26 +82,73 @@
 
     const form = document.getElementById('post-form');
     const status = document.getElementById('post-status');
+    const navActions = document.getElementById('nav-actions');
+
+    // 渲染顶部登录状态
+    async function renderNav() {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      // Clear existing content except for contact, login, and language switcher
+      navActions.querySelector('.lang-switcher').remove();
+      navActions.querySelector('a[href="login.html"]').remove();
+      navActions.querySelector('a[href="contact.html"]').remove();
+
+      if (user) {
+        // Logged in
+        navActions.insertAdjacentHTML('afterbegin', 
+          `<span style="color:#fff;margin-right:12px;">${user.email}</span>
+           <button id="btn-logout" style="margin-right:12px;">退出</button>`
+        );
+        document.getElementById('btn-logout').onclick = async () => {
+          await supabase.auth.signOut();
+          renderNav();
+        };
+      } else {
+        // Not logged in
+        navActions.insertAdjacentHTML('afterbegin', 
+          `<a href="register.html" style="margin-right:12px;">注册</a>
+           <a href="login.html" style="margin-right:12px;">登录</a>`
+        );
+      }
+    }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const title = form.title.value.trim();
-      const content = form.content.value.trim();
+
+      const title = document.getElementById('title').value.trim();
+      const content = document.getElementById('content').value.trim();
 
       if (!title || !content) {
         status.textContent = "标题和内容不能为空。";
         return;
       }
 
-      const { data, error } = await supabase.from('posts').insert([{ title, content }]);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        status.textContent = "请先登录才能发布帖子。";
+        return;
+      }
+
+      const { error } = await supabase
+        .from('forum_posts') // Ensure this matches your Supabase table name
+        .insert([
+          { title, content, user_id: user.id, user_email: user.email }
+        ]);
 
       if (error) {
-        status.textContent = "发布失败：" + error.message;
+        status.textContent = "发布失败: " + error.message;
       } else {
-        status.textContent = "发布成功，跳转中...";
-        setTimeout(() => window.location.href = "forum.html", 1500);
+        status.textContent = "帖子发布成功！即将跳转到论坛...";
+        // Clear form fields
+        document.getElementById('title').value = '';
+        document.getElementById('content').value = '';
+        setTimeout(() => {
+          window.location.href = 'forum.html'; // Redirect to forum page
+        }, 2000); // Redirect after 2 seconds
       }
     });
+
+    renderNav();
   </script>
 </body>
 </html>
