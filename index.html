@@ -3,11 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>鋆赫财税 - 首页</title>
+  <meta name="description" content="鋆赫财税，提供专业的公司注册、代理记账、税务筹划、工商年报、财务咨询等一站式企业财税服务。助力中小企业安心经营，合规发展。">
+  <meta name="keywords" content="鋆赫财税, 财税服务, 公司注册, 代理记账, 税务筹划, 工商年报, 财务咨询, 杭州财税, 企业服务">
+  <title>鋆赫财税 - 专业企业财税服务</title>
   <link rel="stylesheet" href="style.css" />
   <script type="module" src="supabase.js"></script>
+  <script type="module" src="navigation.js"></script>
 </head>
 <body>
+  <div id="page-loading-overlay" class="page-loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
   <header class="header">
     <div class="logo">
       <a href="index.html">
@@ -15,75 +22,155 @@
       </a>
       <span>鋆赫财税</span>
     </div>
-    <nav class="navbar">
-      <ul class="nav-main">
-        <li><a href="index.html" class="active">首页</a></li>
-        <li class="dropdown">
-          <a href="#">关于我们</a>
-          <ul class="dropdown-menu">
-            <li><a href="about.html">公司介绍</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#">知识分享</a>
-          <ul class="dropdown-menu">
-            <li><a href="knowledge.html">财税知识</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#">服务范围</a>
-          <ul class="dropdown-menu">
-            <li><a href="services.html">服务清单</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#">热点新闻</a>
-          <ul class="dropdown-menu">
-            <li><a href="news.html">行业资讯</a></li>
-          </ul>
-        </li>
-        <li><a href="forum.html">论坛</a></li>
-      </ul>
-      <div class="nav-actions" id="nav-actions">
-        </div>
-      <div class="hamburger-menu" id="hamburger-menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
+    <div id="nav-container"></div>
   </header>
 
-  <main class="main">
+  <main class="main container">
     <section class="intro">
       <h1>欢迎来到鋆赫财税</h1>
-      <p>我们提供专业的企业财税服务，助力您安心经营。</p>
-      <img src="https://via.placeholder.com/800x400?text=Placeholder+Image" alt="公司宣传图" style="max-width: 100%; height: auto; margin-top: 20px;">
+      <p>我们提供专业的企业财税服务，助力您安心经营，合规发展。</p>
+      <p style="margin-top: 15px;">
+        <a href="services.html" class="nav-action-button">了解我们的服务</a>
+      </p>
     </section>
 
-    <section class="section-features">
+    <section class="home-section">
       <h2>我们的优势</h2>
-      <div class="feature-grid">
-        <div class="feature-item">
+      <div class="advantages-grid">
+        <div class="advantage-item">
           <h3>专业团队</h3>
-          <p>资深财税专家，经验丰富。</p>
+          <p>资深财税专家，提供精准高效的服务。</p>
         </div>
-        <div class="feature-item">
-          <h3>高效服务</h3>
-          <p>流程优化，响应迅速。</p>
+        <div class="advantage-item">
+          <h3>一站式服务</h3>
+          <p>从注册到年报，全面解决您的财税难题。</p>
         </div>
-        <div class="feature-item">
-          <h3>定制方案</h3>
-          <p>根据需求，提供个性化服务。</p>
+        <div class="advantage-item">
+          <h3>高效便捷</h3>
+          <p>流程优化，节省您的宝贵时间。</p>
+        </div>
+        <div class="advantage-item">
+          <h3>风险控制</h3>
+          <p>合法合规，有效规避财税风险。</p>
         </div>
       </div>
+    </section>
+
+    <section class="home-section">
+      <h2>最新动态</h2>
+      <div id="latest-news" class="post-list">
+        <p class="loading-spinner">加载最新新闻...</p>
+      </div>
+      <p style="text-align: center; margin-top: 20px;">
+        <a href="news.html" class="nav-action-button">查看更多新闻</a>
+      </p>
+    </section>
+
+    <section class="home-section">
+      <h2>热门讨论</h2>
+      <div id="hot-topics" class="post-list">
+        <p class="loading-spinner">加载热门讨论...</p>
+      </div>
+      <p style="text-align: center; margin-top: 20px;">
+        <a href="forum.html" class="nav-action-button">前往论坛</a>
+      </p>
     </section>
 
   </main>
 
   <footer class="footer">
-    <p>© 2025 杭州鋆赫财税咨询有限公司</p>
+    <p>© 2025 杭州鋆赫财税咨询有限公司 版权所有</p>
   </footer>
 
+  <script type="module">
+    import { renderNavigationBar } from './navigation.js';
+    import { supabase } from './supabase.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        // 渲染导航栏
+        renderNavigationBar('nav-container', 'index.html');
+
+        const loadingOverlay = document.getElementById('page-loading-overlay');
+        loadingOverlay.classList.add('hidden'); // 页面加载后隐藏加载覆盖层
+
+        // 加载最新新闻
+        async function loadLatestNews() {
+            const newsContainer = document.getElementById('latest-news');
+            newsContainer.innerHTML = '<p class="loading-spinner">加载最新新闻...</p>';
+            const { data: posts, error } = await supabase
+                .from('posts')
+                .select('id, title, content, created_at, category')
+                .eq('category', 'news') // 假设新闻类别为 'news'
+                .order('created_at', { ascending: false })
+                .limit(3); // 只显示最新的3条
+
+            if (error) {
+                newsContainer.innerHTML = `<p class="form-message error">加载新闻失败：${error.message}</p>`;
+                return;
+            }
+
+            if (!posts.length) {
+                newsContainer.innerHTML = '<p>暂无最新新闻。</p>';
+                return;
+            }
+
+            newsContainer.innerHTML = ''; // 清空加载提示
+            posts.forEach(post => {
+                const div = document.createElement('div');
+                div.className = 'post-item';
+                div.innerHTML = `
+                    <a href="post-detail.html?id=${post.id}">
+                        <h3>${post.title}</h3>
+                        <p>${post.content}</p>
+                        <small>发布于 ${new Date(post.created_at).toLocaleDateString()}</small>
+                    </a>
+                `;
+                newsContainer.appendChild(div);
+            });
+        }
+
+        // 加载热门讨论（这里我们简单取最新的3条论坛帖子）
+        async function loadHotTopics() {
+            const topicsContainer = document.getElementById('hot-topics');
+            topicsContainer.innerHTML = '<p class="loading-spinner">加载热门讨论...</p>';
+            const { data: posts, error } = await supabase
+                .from('posts')
+                .select('id, title, content, created_at, category')
+                .eq('category', 'forum') // 假设论坛类别为 'forum'
+                .order('created_at', { ascending: false })
+                .limit(3); // 只显示最新的3条
+
+            if (error) {
+                topicsContainer.innerHTML = `<p class="form-message error">加载热门讨论失败：${error.message}</p>`;
+                return;
+            }
+
+            if (!posts.length) {
+                topicsContainer.innerHTML = '<p>暂无热门讨论，快来发帖吧！</p>';
+                return;
+            }
+
+            topicsContainer.innerHTML = ''; // 清空加载提示
+            posts.forEach(post => {
+                const div = document.createElement('div');
+                div.className = 'post-item';
+                div.innerHTML = `
+                    <a href="post-detail.html?id=${post.id}">
+                        <h3>${post.title}</h3>
+                        <p>${post.content}</p>
+                        <small>发布于 ${new Date(post.created_at).toLocaleDateString()}</small>
+                    </a>
+                `;
+                topicsContainer.appendChild(div);
+            });
+        }
+
+        // 同时加载数据
+        await Promise.all([
+            loadLatestNews(),
+            loadHotTopics()
+        ]);
+    });
+  </script>
 </body>
 </html>

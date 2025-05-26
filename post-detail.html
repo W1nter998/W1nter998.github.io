@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="查看鋆赫财税文章或论坛帖子的详细内容。了解财税知识、新闻资讯或社区讨论的完整信息。">
+  <meta name="keywords" content="帖子详情, 文章内容, 论坛帖子, 财税知识详情, 新闻详情">
+  <title>帖子详情 - 鋆赫财税</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="supabase.js"></script>
+  <script type="module" src="navigation.js"></script>
+</head>
+<body>
+  <div id="page-loading-overlay" class="page-loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  <header class="header">
+    <div class="logo">
+      <a href="index.html">
+        <img src="logo.png" alt="鋆赫财税 Logo">
+      </a>
+      <span>鋆赫财税</span>
+    </div>
+    <div id="nav-container"></div>
+  </header>
+
+  <main class="main container">
+    <section class="post-detail-container">
+      <div id="post-content-area">
+        <p class="loading-spinner">正在加载帖子内容...</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 杭州鋆赫财税咨询有限公司 版权所有</p>
+  </footer>
+
+  <script type="module">
+    import { renderNavigationBar } from './navigation.js';
+    import { supabase } from './supabase.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        // 渲染导航栏，高亮当前页面（如果导航项中有“帖子详情”这种抽象的）
+        // 对于post-detail，我们可以根据referrer或者不设高亮，或者高亮其所属的类别（如知识分享、热点新闻、论坛）
+        // 这里暂时不设置高亮，或只高亮“论坛”作为默认
+        renderNavigationBar('nav-container', 'forum.html'); // 默认高亮论坛，因为大部分是论坛帖子
+
+        const loadingOverlay = document.getElementById('page-loading-overlay');
+        loadingOverlay.classList.add('hidden'); // 页面加载后隐藏加载覆盖层
+
+        const postContentArea = document.getElementById('post-content-area');
+
+        // 获取URL中的帖子ID
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+
+        if (!postId) {
+            postContentArea.innerHTML = '<p class="form-message error">错误：未找到帖子ID。</p>';
+            return;
+        }
+
+        // 从Supabase加载帖子详情
+        async function loadPostDetail(id) {
+            postContentArea.innerHTML = '<p class="loading-spinner">正在加载帖子内容...</p>';
+            const { data: post, error } = await supabase
+                .from('posts')
+                .select('title, content, created_at, author_email, category')
+                .eq('id', id)
+                .single(); // 使用 .single() 确保只返回一条记录
+
+            if (error) {
+                postContentArea.innerHTML = `<p class="form-message error">加载帖子失败：${error.message}</p>`;
+                console.error('Error loading post detail:', error.message);
+                return;
+            }
+
+            if (!post) {
+                postContentArea.innerHTML = '<p class="form-message info">未找到该帖子。</p>';
+                return;
+            }
+
+            // 渲染帖子内容
+            postContentArea.innerHTML = `
+                <h1>${post.title}</h1>
+                <p class="post-meta">
+                    发布于 ${new Date(post.created_at).toLocaleDateString()}
+                    ${post.author_email ? ` • 作者: ${post.author_email}` : ''}
+                    ${post.category ? ` • 分类: ${post.category}` : ''}
+                </p>
+                <div class="post-content">
+                    <p>${post.content.replace(/\n/g, '<br>')}</p> </div>
+                <a href="javascript:history.back()" style="display: block; margin-top: 30px; text-align: center;">返回上一页</a>
+            `;
+        }
+
+        await loadPostDetail(postId);
+    });
+  </script>
+</body>
+</html>

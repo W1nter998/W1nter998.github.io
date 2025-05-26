@@ -3,11 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="登录鋆赫财税账户，访问您的个人中心和社区论坛。">
+  <meta name="keywords" content="登录, 账户登录, 用户认证, 鋆赫财税登录">
   <title>登录 - 鋆赫财税</title>
   <link rel="stylesheet" href="style.css" />
   <script type="module" src="supabase.js"></script>
+  <script type="module" src="navigation.js"></script>
 </head>
 <body>
+  <div id="page-loading-overlay" class="page-loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
   <header class="header">
     <div class="logo">
       <a href="index.html">
@@ -15,96 +22,82 @@
       </a>
       <span>鋆赫财税</span>
     </div>
-    <nav class="navbar">
-      <ul class="nav-main">
-        <li><a href="index.html">首页</a></li>
-        <li class="dropdown">
-          <a href="#">关于我们</a>
-          <ul class="dropdown-menu">
-            <li><a href="about.html">公司介绍</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#">知识分享</a>
-          <ul class="dropdown-menu">
-            <li><a href="knowledge.html">财税知识</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#">服务范围</a>
-          <ul class="dropdown-menu">
-            <li><a href="services.html">服务清单</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#">热点新闻</a>
-          <ul class="dropdown-menu">
-            <li><a href="news.html">行业资讯</a></li>
-          </ul>
-        </li>
-        <li><a href="forum.html">论坛</a></li>
-      </ul>
-      <div class="nav-actions" id="nav-actions">
-        </div>
-      <div class="hamburger-menu" id="hamburger-menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
+    <div id="nav-container"></div>
   </header>
 
-  <main class="main">
-    <div class="intro form-container">
+  <main class="main container">
+    <section class="intro">
       <h1>登录鋆赫财税账户</h1>
       <form id="login-form">
-        <label for="email">邮箱</label>
-        <input type="email" id="email" placeholder="邮箱" required class="form-input" />
-        <label for="password">密码</label>
-        <input type="password" id="password" placeholder="密码" required class="form-input" />
-        <button type="submit" class="form-button">登录</button>
+        <label for="email">邮箱:</label>
+        <input type="email" id="email" required placeholder="请输入您的邮箱">
+
+        <label for="password">密码:</label>
+        <input type="password" id="password" required placeholder="请输入您的密码">
+
+        <button type="submit">登录</button>
+        <p id="login-message" class="form-message" style="display: none;"></p>
+        <p style="text-align: center; margin-top: 20px;">
+          还没有账户？<a href="signup.html" style="color: var(--primary-color);">立即注册</a>
+        </p>
       </form>
-      <p id="login-message" class="form-message"></p>
-    </div>
+    </section>
   </main>
 
   <footer class="footer">
-    © 2025 鋆赫财税咨询有限公司
+    <p>© 2025 杭州鋆赫财税咨询有限公司 版权所有</p>
   </footer>
 
   <script type="module">
-    import { supabase, renderNavActions } from './supabase.js';
+    import { supabase } from './supabase.js';
+    import { renderNavigationBar } from './navigation.js';
 
     document.addEventListener('DOMContentLoaded', () => {
-      renderNavActions();
-    });
+        // 渲染导航栏，高亮 'login.html'
+        renderNavigationBar('nav-container', 'login.html');
 
-    const loginForm = document.getElementById('login-form');
-    const loginMessage = document.getElementById('login-message');
+        const loadingOverlay = document.getElementById('page-loading-overlay');
+        loadingOverlay.classList.add('hidden'); // 页面加载后隐藏加载覆盖层
 
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
+        const loginForm = document.getElementById('login-form');
+        const loginMessage = document.getElementById('login-message');
 
-      if (!email || !password) {
-        loginMessage.textContent = '邮箱和密码不能为空。';
-        return;
-      }
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            loginMessage.style.display = 'none'; // 隐藏之前的消息
 
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
 
-      if (error) {
-        loginMessage.textContent = '登录失败: ' + error.message;
-      } else {
-        loginMessage.textContent = '登录成功！正在跳转...';
-        console.log('User logged in:', data.user);
-        // 登录成功后，您可以重定向用户到论坛或其他页面
-        window.location.href = 'forum.html';
-      }
+            if (!email || !password) {
+                loginMessage.classList.remove('success');
+                loginMessage.classList.add('error');
+                loginMessage.textContent = '邮箱和密码不能为空。';
+                loginMessage.style.display = 'block';
+                return;
+            }
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                loginMessage.classList.remove('success');
+                loginMessage.classList.add('error');
+                loginMessage.textContent = `登录失败：${error.message}`;
+                loginMessage.style.display = 'block';
+                console.error('登录错误:', error.message);
+            } else {
+                loginMessage.classList.remove('error');
+                loginMessage.classList.add('success');
+                loginMessage.textContent = '登录成功！正在跳转...';
+                loginMessage.style.display = 'block';
+                console.log('登录成功:', data);
+                // 登录成功后跳转到首页或其他需要登录的页面
+                window.location.href = 'index.html'; // 或 'forum.html'
+            }
+        });
     });
   </script>
 </body>

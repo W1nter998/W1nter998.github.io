@@ -2,70 +2,79 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>关于 · 鋆赫财税</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="了解杭州鋆赫财税咨询有限公司，一家专注于为中小企业提供公司注册、代理记账、税务筹划等一站式财税服务的专业机构。">
+  <meta name="keywords" content="鋆赫财税, 公司介绍, 企业背景, 财税服务, 杭州财税, 专业团队">
+  <title>关于我们 - 鋆赫财税</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="supabase.js"></script>
+  <script type="module" src="navigation.js"></script>
 </head>
 <body>
-  <header>
+  <div id="page-loading-overlay" class="page-loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  <header class="header">
     <div class="logo">
       <a href="index.html">
         <img src="logo.png" alt="鋆赫财税 Logo">
       </a>
       <span>鋆赫财税</span>
     </div>
-    <nav>
-      <ul class="nav-main">
-        <li><a href="index.html">首页</a></li>
-        <li class="dropdown"><a class="active" href="#">关于</a>
-          <ul class="dropdown-menu">
-            <li><a href="about.html">公司介绍</a></li>
-          </ul>
-        </li>
-        <li class="dropdown"><a href="services.html">服务</a>
-            <ul class="dropdown-menu">
-                <li><a href="services.html">服务项目</a></li>
-            </ul>
-        </li>
-        <li class="dropdown"><a href="knowledge.html">知识分享</a>
-            <ul class="dropdown-menu">
-                <li><a href="knowledge.html">财税知识</a></li>
-            </ul>
-        </li>
-        <li class="dropdown"><a href="news.html">热点新闻</a>
-            <ul class="dropdown-menu">
-                <li><a href="news.html">行业资讯</a></li>
-            </ul>
-        </li>
-        <li><a href="forum.html">论坛</a></li>
-      </ul>
-      <div class="nav-actions" id="nav-actions"></div>
-      <div class="hamburger-menu" id="hamburger-menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
+    <div id="nav-container"></div>
   </header>
 
-  <main class="main">
+  <main class="main container">
     <section class="intro">
       <h1>公司介绍</h1>
       <p>杭州鋆赫财税咨询有限公司自2020年成立以来，一直专注于为中小企业提供一站式财税服务。我们的服务涵盖：</p>
-      <ul style="text-align:left; display:inline-block; margin-top:20px;">
-        <li>✔️ 公司注册与变更</li>
-        <li>✔️ 日常代理记账与税务申报</li>
-        <li>✔️ 税务筹划与风险管控</li>
-        <li>✔️ 工商年检与审计服务</li>
-        <li>✔️ 企业财务咨询与内控建设</li>
+      <ul>
+        <li>公司注册与变更</li>
+        <li>日常代理记账与税务申报</li>
+        <li>税务筹划与风险管控</li>
+        <li>工商年检与审计服务</li>
+        <li>企业财务咨询与内控建设</li>
       </ul>
+      <p style="margin-top: 25px; color: var(--light-text-color);">
+        我们致力于通过专业的服务，帮助企业降低运营成本，规避财税风险，实现健康可持续发展。
+      </p>
     </section>
+
+    <section class="home-section">
+      <h2>我们的团队</h2>
+      <div class="team-section" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-top: 20px;">
+        <div class="team-member" style="background-color: #f8f8f8; padding: 20px; border-radius: var(--border-radius-medium); box-shadow: var(--box-shadow-light); text-align: center; max-width: 280px;">
+          <img src="placeholder-avatar.png" alt="团队成员1" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px;">
+          <h3>张三</h3>
+          <p style="color: var(--primary-color); font-weight: 500; margin-bottom: 10px;">首席财税顾问</p>
+          <p style="font-size: 0.95em; color: var(--light-text-color);">拥有超过15年财税行业经验，擅长企业税务规划与风险管理。</p>
+        </div>
+        <div class="team-member" style="background-color: #f8f8f8; padding: 20px; border-radius: var(--border-radius-medium); box-shadow: var(--box-shadow-light); text-align: center; max-width: 280px;">
+          <img src="placeholder-avatar.png" alt="团队成员2" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px;">
+          <h3>李四</h3>
+          <p style="color: var(--primary-color); font-weight: 500; margin-bottom: 10px;">高级会计师</p>
+          <p style="font-size: 0.95em; color: var(--light-text-color);">精通各类账务处理和财务报表编制，确保数据准确无误。</p>
+        </div>
+        </div>
+    </section>
+
   </main>
 
   <footer class="footer">
-    <p>© 2025 杭州鋆赫财税咨询有限公司</p>
+    <p>© 2025 杭州鋆赫财税咨询有限公司 版权所有</p>
   </footer>
 
+  <script type="module">
+    import { renderNavigationBar } from './navigation.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // 渲染导航栏，高亮 'about.html'
+        renderNavigationBar('nav-container', 'about.html');
+
+        const loadingOverlay = document.getElementById('page-loading-overlay');
+        loadingOverlay.classList.add('hidden'); // 页面加载后隐藏加载覆盖层
+    });
+  </script>
 </body>
 </html>

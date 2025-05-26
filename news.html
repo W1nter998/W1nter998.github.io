@@ -2,90 +2,98 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>热点新闻 · 鋆赫论坛</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="查看鋆赫财税最新的热点新闻和行业资讯，包括财税政策变化、行业趋势分析、企业案例分享等，助您及时掌握财税动态。">
+  <meta name="keywords" content="热点新闻, 行业资讯, 财税动态, 政策解读, 企业新闻, 鋆赫财税新闻">
+  <title>热点新闻 - 鋆赫财税</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="supabase.js"></script>
+  <script type="module" src="navigation.js"></script>
 </head>
 <body>
-  <header>
+  <div id="page-loading-overlay" class="page-loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  <header class="header">
     <div class="logo">
-      <a href="index.html"><img src="logo.png" alt="鋆赫财税 Logo"></a>
-      <span>鋆赫论坛</span>
+      <a href="index.html">
+        <img src="logo.png" alt="鋆赫财税 Logo">
+      </a>
+      <span>鋆赫财税</span>
     </div>
-    <nav>
-      <ul class="nav-main">
-        <li><a href="index.html">首页</a></li>
-        <li><a href="about.html">关于</a></li>
-        <li><a href="services.html">服务</a></li>
-        <li><a href="knowledge.html">知识分享</a></li>
-        <li class="dropdown"><a class="active" href="#">热点新闻</a>
-          <ul class="dropdown-menu">
-            <li><a href="news.html">热点新闻</a></li>
-          </ul>
-        </li>
-        <li><a href="forum.html">论坛</a></li>
-      </ul>
-      <div class="nav-actions" id="nav-actions"></div>
-      <div class="hamburger-menu" id="hamburger-menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
+    <div id="nav-container"></div>
   </header>
 
-  <main class="main">
-    <section class="forum-section">
+  <main class="main container">
+    <section class="intro">
       <h1>热点新闻</h1>
-      <div id="news-container">
-        <p>正在加载新闻内容...</p>
-        </div>
+      <p>及时掌握行业动态，洞悉财税政策变化，助您运筹帷幄。</p>
     </section>
+
+    <section class="home-section">
+      <h2>最新资讯</h2>
+      <div id="news-posts-container" class="post-list">
+        <p class="loading-spinner">加载新闻资讯...</p>
+      </div>
+    </section>
+
   </main>
 
   <footer class="footer">
-    <p>© 2025 杭州鋆赫财税咨询有限公司</p>
+    <p>© 2025 杭州鋆赫财税咨询有限公司 版权所有</p>
   </footer>
 
   <script type="module">
-    import { supabase, renderNavActions } from './supabase.js';
+    import { renderNavigationBar } from './navigation.js';
+    import { supabase } from './supabase.js';
 
-    document.addEventListener('DOMContentLoaded', () => {
-      renderNavActions(); // 渲染导航栏
-      loadNews();         // 加载新闻内容
+    document.addEventListener('DOMContentLoaded', async () => {
+        // 渲染导航栏，高亮 'news.html'
+        renderNavigationBar('nav-container', 'news.html');
+
+        const loadingOverlay = document.getElementById('page-loading-overlay');
+        loadingOverlay.classList.add('hidden'); // 页面加载后隐藏加载覆盖层
+
+        const newsContainer = document.getElementById('news-posts-container');
+
+        // 加载新闻帖子
+        async function loadNewsPosts() {
+            newsContainer.innerHTML = '<p class="loading-spinner">加载新闻资讯...</p>';
+            const { data: posts, error } = await supabase
+                .from('posts')
+                .select('id, title, content, created_at, category')
+                .eq('category', 'news') // 只加载 category 为 'news' 的帖子
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                newsContainer.innerHTML = `<p class="form-message error">加载新闻资讯失败：${error.message}</p>`;
+                console.error('Error loading news posts:', error.message);
+                return;
+            }
+
+            if (!posts.length) {
+                newsContainer.innerHTML = '<p>暂无新闻动态。</p>';
+                return;
+            }
+
+            newsContainer.innerHTML = ''; // 清空加载提示
+            posts.forEach(post => {
+                const div = document.createElement('div');
+                div.className = 'post-item';
+                div.innerHTML = `
+                    <a href="post-detail.html?id=${post.id}">
+                        <h3>${post.title}</h3>
+                        <p>${post.content}</p>
+                        <small>发布于 ${new Date(post.created_at).toLocaleDateString()}</small>
+                    </a>
+                `;
+                newsContainer.appendChild(div);
+            });
+        }
+
+        await loadNewsPosts();
     });
-
-    const newsContainer = document.getElementById('news-container');
-
-    // 加载新闻类帖子
-    async function loadNews() {
-      const { data: posts, error } = await supabase
-        .from('posts')
-        .select('*')
-        .eq('category', 'news') // 假设您在Supabase中有一个'category'字段来区分帖子类型
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        newsContainer.innerHTML = '<p class="form-message">加载失败，请重试。</p>';
-        return;
-      }
-      if (!posts.length) {
-        newsContainer.innerHTML = '<p>暂无新闻动态。</p>';
-        return;
-      }
-      newsContainer.innerHTML = ''; // 清空加载提示
-      posts.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'post-item'; // 复用论坛的样式
-        div.innerHTML = `
-          <h3>${p.title}</h3>
-          <p>${p.content}</p>
-          <small>发布日期: ${new Date(p.created_at).toLocaleDateString()}</small>
-        `;
-        newsContainer.appendChild(div);
-      });
-    }
   </script>
 </body>
 </html>

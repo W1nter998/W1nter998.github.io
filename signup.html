@@ -3,11 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="注册鋆赫财税新账户，加入我们的社区论坛，享受更多专属服务。">
+  <meta name="keywords" content="注册, 账户注册, 用户注册, 邀请码注册, 鋆赫财税注册">
   <title>注册账户 - 鋆赫财税</title>
   <link rel="stylesheet" href="style.css" />
   <script type="module" src="supabase.js"></script>
+  <script type="module" src="navigation.js"></script>
 </head>
 <body>
+  <div id="page-loading-overlay" class="page-loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
   <header class="header">
     <div class="logo">
       <a href="index.html">
@@ -15,117 +22,103 @@
       </a>
       <span>鋆赫财税</span>
     </div>
-    <nav class="navbar">
-      <ul class="nav-main">
-        <li><a href="index.html">首页</a></li>
-        <li class="dropdown">
-          <a href="#">关于我们</a>
-          <ul class="dropdown-menu">
-            <li><a href="about.html">公司介绍</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#">知识分享</a>
-          <ul class="dropdown-menu">
-            <li><a href="knowledge.html">财税知识</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#">服务范围</a>
-          <ul class="dropdown-menu">
-            <li><a href="services.html">服务清单</a></li>
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#">热点新闻</a>
-          <ul class="dropdown-menu">
-            <li><a href="news.html">行业资讯</a></li>
-          </ul>
-        </li>
-        <li><a href="forum.html">论坛</a></li>
-      </ul>
-      <div class="nav-actions" id="nav-actions">
-        </div>
-      <div class="hamburger-menu" id="hamburger-menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
+    <div id="nav-container"></div>
   </header>
 
-  <main class="main">
-    <div class="intro form-container">
+  <main class="main container">
+    <section class="intro">
       <h1>邀请注册</h1>
       <form id="signup-form">
-        <label for="invite-code">邀请码</label>
-        <input type="text" id="invite-code" placeholder="邀请码" required class="form-input" />
+        <label for="invite-code">邀请码:</label>
+        <input type="text" id="invite-code" required placeholder="请输入邀请码">
 
-        <label for="email">邮箱</label>
-        <input type="email" id="email" placeholder="邮箱" required class="form-input" />
+        <label for="email">邮箱:</label>
+        <input type="email" id="email" required placeholder="请输入您的邮箱">
 
-        <label for="password">密码</label>
-        <input type="password" id="password" placeholder="密码" required class="form-input" />
+        <label for="password">密码:</label>
+        <input type="password" id="password" required placeholder="请输入您的密码">
 
-        <button type="submit" class="form-button">注册</button>
+        <button type="submit">注册</button>
+        <p id="signup-message" class="form-message" style="display: none;"></p>
+        <p style="text-align: center; margin-top: 20px;">
+          已有账户？<a href="login.html" style="color: var(--primary-color);">立即登录</a>
+        </p>
       </form>
-      <p id="signup-message" class="form-message"></p>
-    </div>
+    </section>
   </main>
 
   <footer class="footer">
-    © 2025 鋆赫财税咨询有限公司
+    <p>© 2025 杭州鋆赫财税咨询有限公司 版权所有</p>
   </footer>
 
   <script type="module">
-    import { supabase, renderNavActions } from './supabase.js';
+    import { supabase } from './supabase.js';
+    import { renderNavigationBar } from './navigation.js';
 
     document.addEventListener('DOMContentLoaded', () => {
-      renderNavActions();
-    });
+        // 渲染导航栏，高亮 'signup.html'
+        renderNavigationBar('nav-container', 'signup.html');
 
-    const signupForm = document.getElementById('signup-form');
-    const signupMessage = document.getElementById('signup-message');
+        const loadingOverlay = document.getElementById('page-loading-overlay');
+        loadingOverlay.classList.add('hidden'); // 页面加载后隐藏加载覆盖层
 
-    // !!! 重要的安全提醒 !!!
-    // 邀请码验证不应该在前端硬编码。
-    // 强烈建议将此逻辑迁移到后端（例如 Supabase Edge Functions 或您的自定义后端服务），
-    // 以防止用户通过查看源代码绕过邀请码限制。
-    const validInvites = ['YUNHE2025', 'VIPONLY', 'TESTCODE']; // 示例，应从后端获取或验证
+        const signupForm = document.getElementById('signup-form');
+        const signupMessage = document.getElementById('signup-message');
 
-    signupForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const inviteCode = document.getElementById('invite-code').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
+        // 硬编码的有效邀请码，实际项目中应从数据库或其他安全方式获取
+        const validInvites = ['YUNHE2025', 'VIPONLY', 'TESTCODE']; 
 
-      if (!inviteCode || !email || !password) {
-        signupMessage.textContent = '所有字段都不能为空。';
-        return;
-      }
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            signupMessage.style.display = 'none'; // 隐藏之前的消息
 
-      if (!validInvites.includes(inviteCode)) {
-        signupMessage.textContent = '无效的邀请码。';
-        return;
-      }
+            const inviteCode = document.getElementById('invite-code').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
 
-      // Supabase 注册用户
-      const { data, error } = await supabase.auth.signUp({
-        email: email,
-        password: password,
-      });
+            if (!inviteCode || !email || !password) {
+                signupMessage.classList.remove('success');
+                signupMessage.classList.add('error');
+                signupMessage.textContent = '所有字段均为必填项。';
+                signupMessage.style.display = 'block';
+                return;
+            }
 
-      if (error) {
-        signupMessage.textContent = '注册失败: ' + error.message;
-      } else if (data && data.user) {
-        signupMessage.textContent = '注册成功！请检查您的邮箱以完成验证。';
-        console.log('User signed up:', data.user);
-        signupForm.reset(); // 清空表单
-      } else {
-        // 对于需要邮箱验证的情况，data.user可能为null或不完整
-        signupMessage.textContent = '注册成功！请检查您的邮箱以完成验证。';
-        signupForm.reset();
-      }
+            // 验证邀请码
+            if (!validInvites.includes(inviteCode)) {
+                signupMessage.classList.remove('success');
+                signupMessage.classList.add('error');
+                signupMessage.textContent = '邀请码无效。';
+                signupMessage.style.display = 'block';
+                return;
+            }
+
+            // 注册用户
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                signupMessage.classList.remove('success');
+                signupMessage.classList.add('error');
+                signupMessage.textContent = `注册失败：${error.message}`;
+                signupMessage.style.display = 'block';
+                console.error('注册错误:', error.message);
+            } else {
+                signupMessage.classList.remove('error');
+                signupMessage.classList.add('success');
+                // 根据Supabase配置，可能需要用户邮箱验证
+                if (data.user && !data.session) {
+                    signupMessage.textContent = '注册成功！请检查您的邮箱进行验证。';
+                } else {
+                    signupMessage.textContent = '注册成功！正在自动登录...';
+                    // 注册并自动登录成功后，跳转到首页或论坛
+                    window.location.href = 'index.html'; // 或 'forum.html'
+                }
+                console.log('注册成功:', data);
+            }
+        });
     });
   </script>
 </body>

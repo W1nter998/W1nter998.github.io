@@ -2,90 +2,98 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>知识分享 · 鋆赫论坛</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="获取鋆赫财税提供的专业财税知识分享，涵盖公司注册、代理记账、税务申报、财务管理等方面的最新政策解读和实务操作指南。">
+  <meta name="keywords" content="财税知识, 知识分享, 税务政策, 财务管理, 公司注册流程, 代理记账知识, 行业动态">
+  <title>知识分享 - 鋆赫财税</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="supabase.js"></script>
+  <script type="module" src="navigation.js"></script>
 </head>
 <body>
-  <header>
+  <div id="page-loading-overlay" class="page-loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  <header class="header">
     <div class="logo">
-      <a href="index.html"><img src="logo.png" alt="鋆赫财税 Logo"></a>
-      <span>鋆赫论坛</span>
+      <a href="index.html">
+        <img src="logo.png" alt="鋆赫财税 Logo">
+      </a>
+      <span>鋆赫财税</span>
     </div>
-    <nav>
-      <ul class="nav-main">
-        <li><a href="index.html">首页</a></li>
-        <li><a href="about.html">关于</a></li>
-        <li><a href="services.html">服务</a></li>
-        <li class="dropdown"><a class="active" href="#">知识分享</a>
-          <ul class="dropdown-menu">
-            <li><a href="knowledge.html">知识分享</a></li>
-          </ul>
-        </li>
-        <li><a href="news.html">热点新闻</a></li>
-        <li><a href="forum.html">论坛</a></li>
-      </ul>
-      <div class="nav-actions" id="nav-actions"></div>
-      <div class="hamburger-menu" id="hamburger-menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
+    <div id="nav-container"></div>
   </header>
 
-  <main class="main">
-    <section class="forum-section">
-      <h1>财税知识分享</h1>
-      <div id="knowledge-container">
-        <p>正在加载知识内容...</p>
-        </div>
+  <main class="main container">
+    <section class="intro">
+      <h1>知识分享</h1>
+      <p>在这里，您可以获取最新的财税政策解读、行业动态和实务操作指南，助您提升财税管理水平。</p>
     </section>
+
+    <section class="home-section">
+      <h2>财税知识文章</h2>
+      <div id="knowledge-posts-container" class="post-list">
+        <p class="loading-spinner">加载知识文章...</p>
+      </div>
+    </section>
+
   </main>
 
   <footer class="footer">
-    <p>© 2025 杭州鋆赫财税咨询有限公司</p>
+    <p>© 2025 杭州鋆赫财税咨询有限公司 版权所有</p>
   </footer>
 
   <script type="module">
-    import { supabase, renderNavActions } from './supabase.js';
+    import { renderNavigationBar } from './navigation.js';
+    import { supabase } from './supabase.js';
 
-    document.addEventListener('DOMContentLoaded', () => {
-      renderNavActions(); // 渲染导航栏
-      loadKnowledge();    // 加载知识分享内容
+    document.addEventListener('DOMContentLoaded', async () => {
+        // 渲染导航栏，高亮 'knowledge.html'
+        renderNavigationBar('nav-container', 'knowledge.html');
+
+        const loadingOverlay = document.getElementById('page-loading-overlay');
+        loadingOverlay.classList.add('hidden'); // 页面加载后隐藏加载覆盖层
+
+        const postsContainer = document.getElementById('knowledge-posts-container');
+
+        // 加载知识分享帖子
+        async function loadKnowledgePosts() {
+            postsContainer.innerHTML = '<p class="loading-spinner">加载知识文章...</p>';
+            const { data: posts, error } = await supabase
+                .from('posts')
+                .select('id, title, content, created_at, category')
+                .eq('category', 'knowledge') // 只加载 category 为 'knowledge' 的帖子
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                postsContainer.innerHTML = `<p class="form-message error">加载知识文章失败：${error.message}</p>`;
+                console.error('Error loading knowledge posts:', error.message);
+                return;
+            }
+
+            if (!posts.length) {
+                postsContainer.innerHTML = '<p>暂无知识分享文章。</p>';
+                return;
+            }
+
+            postsContainer.innerHTML = ''; // 清空加载提示
+            posts.forEach(post => {
+                const div = document.createElement('div');
+                div.className = 'post-item';
+                div.innerHTML = `
+                    <a href="post-detail.html?id=${post.id}">
+                        <h3>${post.title}</h3>
+                        <p>${post.content}</p>
+                        <small>发布于 ${new Date(post.created_at).toLocaleDateString()}</small>
+                    </a>
+                `;
+                postsContainer.appendChild(div);
+            });
+        }
+
+        await loadKnowledgePosts();
     });
-
-    const knowledgeContainer = document.getElementById('knowledge-container');
-
-    // 加载知识区帖子
-    async function loadKnowledge() {
-      const { data: posts, error } = await supabase
-        .from('posts')
-        .select('*')
-        .eq('category', 'knowledge') // 假设您在Supabase中有一个'category'字段来区分帖子类型
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        knowledgeContainer.innerHTML = '<p class="form-message">加载失败，请刷新重试。</p>';
-        return;
-      }
-      if (!posts.length) {
-        knowledgeContainer.innerHTML = '<p>暂无知识分享，快去论坛发表吧！</p>';
-        return;
-      }
-      knowledgeContainer.innerHTML = ''; // 清空加载提示
-      posts.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'post-item'; // 复用论坛的样式
-        div.innerHTML = `
-          <h3>${p.title}</h3>
-          <p>${p.content}</p>
-          <small>发布日期: ${new Date(p.created_at).toLocaleDateString()}</small>
-        `;
-        knowledgeContainer.appendChild(div);
-      });
-    }
   </script>
 </body>
 </html>

@@ -2,54 +2,116 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>联系我们 · 鋆赫财税</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="联系杭州鋆赫财税咨询有限公司，获取专业的公司注册、代理记账、税务筹划等财税服务。您可以通过邮箱、电话或在线咨询联系我们。">
+  <meta name="keywords" content="鋆赫财税联系方式, 财税咨询, 杭州财税电话, 邮箱, 地址, 在线客服">
+  <title>联系我们 - 鋆赫财税</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="supabase.js"></script>
+  <script type="module" src="navigation.js"></script>
 </head>
 <body>
-  <header>
+  <div id="page-loading-overlay" class="page-loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  <header class="header">
     <div class="logo">
-      <a href="index.html"><img src="logo.png" alt="鋆赫财税 Logo"></a>
+      <a href="index.html">
+        <img src="logo.png" alt="鋆赫财税 Logo">
+      </a>
       <span>鋆赫财税</span>
     </div>
-    <nav>
-      <ul class="nav-main">
-        <li><a href="index.html">首页</a></li>
-        <li><a href="about.html">关于</a></li>
-        <li><a href="services.html">服务</a></li>
-        <li><a href="knowledge.html">知识</a></li>
-        <li><a href="news.html">新闻</a></li>
-        <li><a href="forum.html">论坛</a></li>
-      </ul>
-      <div class="nav-actions" id="nav-actions"></div>
-      <div class="hamburger-menu" id="hamburger-menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </nav>
+    <div id="nav-container"></div>
   </header>
 
-  <main class="main">
+  <main class="main container">
     <section class="intro">
       <h1>联系我们</h1>
-      <p>如果您有任何问题，欢迎通过以下方式联系我们：</p>
-      <ul style="text-align:left; display:inline-block; margin-top:20px;">
-        <li>📧 邮箱：<a href="mailto:support@yunhe-tax.com">support@yunhe-tax.com</a></li>
-        <li>📞 电话：<a href="tel:+8617395711633">17395711633</a></li>
-        <li>🏢 地址：杭州市滨江区西兴街道泽明科创园211</li>
+      <p>如果您有任何财税方面的疑问或需求，欢迎随时通过以下方式与我们取得联系。我们将竭诚为您提供专业的咨询服务。</p>
+      <ul style="text-align:left; display:inline-block; margin-top:30px; font-size:1.1em;">
+        <li style="margin-bottom: 12px;">📧 邮箱：<a href="mailto:support@yunhe-tax.com" style="color: var(--text-color); text-decoration: underline;">support@yunhe-tax.com</a></li>
+        <li style="margin-bottom: 12px;">📞 电话：<a href="tel:+8617395711633" style="color: var(--text-color); text-decoration: underline;">17395711633</a></li>
+        <li style="margin-bottom: 12px;">🏢 地址：杭州市滨江区西兴街道泽明科创园211室</li>
+        <li style="margin-bottom: 12px;">⏰ 工作时间：周一至周五 9:00 - 18:00</li>
       </ul>
-      <div style="margin-top:30px;">
-        <p>微信扫码咨询：</p>
-        <img src="qrcode.png" alt="微信二维码" style="width:120px; height:auto;">
+      <div class="contact-qrcode">
+        <p style="margin-bottom: 10px; color: var(--light-text-color);">微信扫码咨询：</p>
+        <img src="qrcode.png" alt="微信二维码">
       </div>
     </section>
+
+    <section class="home-section" style="margin-top: 40px;">
+        <h2>在线留言</h2>
+        <form id="contact-form">
+            <label for="name">您的姓名:</label>
+            <input type="text" id="name" name="name" required placeholder="请输入您的姓名">
+
+            <label for="email">您的邮箱:</label>
+            <input type="email" id="email" name="email" required placeholder="请输入您的邮箱">
+
+            <label for="subject">主题:</label>
+            <input type="text" id="subject" name="subject" required placeholder="请输入留言主题">
+
+            <label for="message">您的留言:</label>
+            <textarea id="message" name="message" rows="6" required placeholder="请在这里输入您的具体需求或问题..."></textarea>
+
+            <button type="submit">发送留言</button>
+            <p id="form-status" class="form-message" style="display: none;"></p>
+        </form>
+    </section>
+
   </main>
 
   <footer class="footer">
-    <p>© 2025 杭州鋆赫财税咨询有限公司</p>
+    <p>© 2025 杭州鋆赫财税咨询有限公司 版权所有</p>
   </footer>
 
+  <script type="module">
+    import { renderNavigationBar } from './navigation.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // 渲染导航栏，高亮 'contact.html'
+        renderNavigationBar('nav-container', 'contact.html');
+
+        const loadingOverlay = document.getElementById('page-loading-overlay');
+        loadingOverlay.classList.add('hidden'); // 页面加载后隐藏加载覆盖层
+
+        const contactForm = document.getElementById('contact-form');
+        const formStatus = document.getElementById('form-status');
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            formStatus.style.display = 'none'; // 隐藏之前的消息
+
+            // 简单的表单验证
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const subject = document.getElementById('subject').value.trim();
+            const message = document.getElementById('message').value.trim();
+
+            if (!name || !email || !subject || !message) {
+                formStatus.classList.remove('success');
+                formStatus.classList.add('error');
+                formStatus.textContent = '所有字段均为必填项。';
+                formStatus.style.display = 'block';
+                return;
+            }
+
+            // 这里可以集成到 Supabase 数据库存储留言，或者发送到后端API
+            // 暂时只做前端模拟发送成功
+            console.log('留言信息:', { name, email, subject, message });
+
+            // 模拟网络请求
+            setTimeout(() => {
+                formStatus.classList.remove('error');
+                formStatus.classList.add('success');
+                formStatus.textContent = '您的留言已成功发送，我们会尽快与您联系！';
+                formStatus.style.display = 'block';
+                contactForm.reset(); // 清空表单
+            }, 1000);
+        });
+    });
+  </script>
 </body>
 </html>
