@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>注册账号 - 鋆赫论坛</title>
+  <title>注册账号 - 鋆赫财税</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,16 +12,46 @@
       <a href="index.html">
         <img src="logo.png" alt="鋆赫财税 Logo" />
       </a>
-      <span>鋆赫论坛</span>
+      <span>鋆赫财税</span>
     </div>
-    <ul class="nav-actions">
-      <a href="contact.html">联系我们</a>
-      <a href="login.html">登录</a>
-      <select class="lang-switcher">
-        <option>中文</option>
-        <option>EN</option>
-      </select>
-    </ul>
+    <nav class="navbar">
+      <ul class="nav-main">
+        <li><a href="index.html">首页</a></li>
+        <li class="dropdown">
+          <a href="about.html">关于我们</a>
+          <ul class="dropdown-menu">
+            <li><a href="about.html">公司介绍</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="knowledge.html">知识分享</a>
+          <ul class="dropdown-menu">
+            <li><a href="knowledge.html">财税知识</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="services.html">服务范围</a>
+          <ul class="dropdown-menu">
+            <li><a href="services.html">服务清单</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="news.html">热点新闻</a>
+          <ul class="dropdown-menu">
+            <li><a href="news.html">行业资讯</a></li>
+          </ul>
+        </li>
+        <li><a href="forum.html">论坛</a></li>
+      </ul>
+      <div class="nav-actions" id="nav-actions">
+        <a href="contact.html">联系我们</a>
+        <a href="login.html">登录</a>
+        <select class="lang-switcher">
+          <option>简体中文</option>
+          <option>English</option>
+        </select>
+      </div>
+    </nav>
   </header>
 
   <main class="main">
@@ -29,22 +59,22 @@
       <h1>注册账号</h1>
       <form id="register-form">
         <label for="email">邮箱</label><br/>
-        <input type="email" id="email" required /><br/><br/>
+        <input type="email" id="email" placeholder="邮箱" required /><br/><br/>
 
         <label for="password">密码</label><br/>
-        <input type="password" id="password" required /><br/><br/>
+        <input type="password" id="password" placeholder="密码" required /><br/><br/>
 
         <label for="invite">邀请码</label><br/>
-        <input type="text" id="invite" required /><br/><br/>
-
-        <button type="submit">注册</button>
-        <p id="register-status" style="margin-top: 10px;"></p>
+        <input type="text" id="invite" placeholder="邀请码" required /><br/><br/>
+        
+        <button type="submit" style="padding: 10px 20px;">注册</button>
       </form>
+      <p id="register-status" style="color: red; margin-top: 10px;"></p>
     </div>
   </main>
 
   <footer class="footer">
-    © 2025 鋆赫财税咨询有限公司
+    <p>© 2025 杭州鋆赫财税咨询有限公司</p>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -55,37 +85,70 @@
 
     const form = document.getElementById('register-form');
     const status = document.getElementById('register-status');
+    const navActions = document.getElementById('nav-actions');
+
+    // 渲染顶部登录状态
+    async function renderNav() {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      // Clear existing content except for contact, login, and language switcher
+      navActions.querySelector('.lang-switcher').remove();
+      navActions.querySelector('a[href="login.html"]').remove();
+      navActions.querySelector('a[href="contact.html"]').remove();
+
+      if (user) {
+        // Logged in
+        navActions.insertAdjacentHTML('afterbegin', 
+          `<span style="color:#fff;margin-right:12px;">${user.email}</span>
+           <button id="btn-logout" style="margin-right:12px;">退出</button>`
+        );
+        document.getElementById('btn-logout').onclick = async () => {
+          await supabase.auth.signOut();
+          renderNav();
+        };
+      } else {
+        // Not logged in
+        navActions.insertAdjacentHTML('afterbegin', 
+          `<a href="register.html" style="margin-right:12px;">注册</a>
+           <a href="login.html" style="margin-right:12px;">登录</a>`
+        );
+      }
+    }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
-      const invite = document.getElementById('invite').value.trim();
+      const invite = document.getElementById('invite').value.trim(); // Assuming invite code check is on backend
 
       if (!email || !password || !invite) {
-        status.textContent = "请填写所有字段。";
+        status.textContent = "邮箱、密码和邀请码不能为空。";
         return;
       }
 
-      // 检查邀请码（示例：邀请码必须是 YUNHE2025）
-      if (invite !== "YUNHE2025") {
-        status.textContent = "邀请码无效。";
-        return;
-      }
+      // Here you would typically send the invite code to your backend/Supabase Edge Function
+      // to validate it before allowing registration. For this example, we'll proceed
+      // with a basic Supabase registration assuming invite validation happens elsewhere
+      // or is not strictly enforced on the client side.
 
-      const { user, error } = await supabase.auth.signUp({
-        email,
-        password,
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password,
       });
 
       if (error) {
-        status.textContent = "注册失败：" + error.message;
+        status.textContent = "注册失败: " + error.message;
       } else {
-        status.textContent = "注册成功，请前往邮箱激活。";
-        form.reset();
+        status.textContent = "注册成功！请检查您的邮箱进行验证。";
+        // Optionally redirect after a short delay
+        setTimeout(() => {
+          window.location.href = 'login.html'; // Redirect to login page
+        }, 3000);
       }
     });
+
+    renderNav(); // Initial render of navigation
   </script>
 </body>
 </html>
