@@ -5,29 +5,33 @@
   box-sizing: border-box;
 }
 
+/* Font (Attempting an iOS-like feel with common web fonts) */
 body {
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  background-color: #ffffff;
-  color: #333;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: #f2f2f7; /* Light gray background, typical for iOS apps */
+  color: #1c1c1e; /* Darker text for readability */
   line-height: 1.6;
-  font-size: 16px;
+  font-size: 17px; /* Slightly larger for iOS feel */
 }
 
-/* Link normalization */
+/* Link normalization and subtle hover effects */
 a {
   color: inherit;
   text-decoration: none;
+  transition: color 0.2s ease-in-out; /* Smooth color transition */
 }
 
 a:hover {
-  color: #0078d4;
-  text-decoration: underline;
+  color: #007aff; /* iOS Blue */
+  text-decoration: none; /* No underline on hover for a cleaner look */
 }
 
 /* Header & Logo */
-header {
-  background-color: #000; /* 黑色顶部导航栏 */
-  color: #fff;
+.header {
+  background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white for a "frosted glass" effect */
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+  -webkit-backdrop-filter: blur(10px); /* For Safari */
+  color: #1c1c1e; /* Dark text for header */
   padding: 10px 20px;
   display: flex;
   align-items: center;
@@ -36,113 +40,494 @@ header {
   position: sticky;
   top: 0;
   z-index: 999;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+  border-bottom: 1px solid #e5e5ea; /* Subtle separator line */
 }
 
 .logo {
   display: flex;
   align-items: center;
+  font-weight: 600; /* Slightly bolder logo text */
+  font-size: 20px; /* Larger logo text */
 }
 
 .logo img {
-  height: 48px;
+  height: 40px; /* Slightly smaller logo to fit header better */
   width: auto;
-  margin-right: 10px;
+  margin-right: 8px;
+  border-radius: 8px; /* Slightly rounded logo image */
 }
 
 /* Navigation Menu */
-nav ul {
-  list-style: none;
+.navbar {
   display: flex;
-  gap: 24px;
+  align-items: center;
 }
 
-nav ul li {
+.nav-main {
+  list-style: none;
+  display: flex;
+  gap: 24px; /* Maintain gap */
+  margin: 0; /* Remove default margin */
+}
+
+.nav-main li {
   position: relative;
 }
 
-nav ul li a {
-  padding: 10px 12px;
+.nav-main li a {
+  padding: 10px 15px; /* Adjust padding */
   display: block;
   font-weight: 500;
+  color: #555; /* Default nav link color */
+  transition: all 0.2s ease-in-out; /* Smooth transitions for links */
+  border-radius: 8px; /* Rounded corners for clickable areas */
 }
 
-nav ul li:hover > ul {
-  display: block;
+.nav-main li a.active {
+  color: #007aff; /* iOS Blue for active link */
+  font-weight: 600;
 }
 
-/* Submenu */
-nav ul ul {
+.nav-main li a:hover {
+  background-color: #e0e0e5; /* Light hover background */
+  color: #007aff;
+  text-decoration: none;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
   display: none;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 5px); /* Position slightly below parent */
   left: 0;
-  background-color: #000;
-  min-width: 160px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  min-width: 180px; /* Wider dropdowns */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* More pronounced shadow */
+  border-radius: 12px; /* More rounded corners */
+  overflow: hidden; /* Ensures rounded corners apply to children */
+  list-style: none;
+  padding: 8px 0; /* Padding inside dropdown */
+  opacity: 0; /* Start hidden for animation */
+  transform: translateY(10px); /* Start slightly below for animation */
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Animation */
   z-index: 1000;
 }
 
-nav ul ul li a {
+.nav-main li:hover > .dropdown-menu {
+  display: block;
+  opacity: 1; /* Fade in */
+  transform: translateY(0); /* Slide up */
+}
+
+.dropdown-menu li a {
+  color: #1c1c1e; /* Darker text for dropdown items */
+  padding: 10px 15px;
+  white-space: nowrap; /* Prevent wrapping */
+  border-radius: 0; /* No individual rounded corners for dropdown items */
+}
+
+.dropdown-menu li a:hover {
+  background-color: #f2f2f7; /* Light background for dropdown item hover */
+  color: #007aff;
+}
+
+/* Nav Actions (Login/Contact/Language) */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Spacing between action items */
+  margin-left: 20px; /* Separate from main nav */
+}
+
+.nav-actions a,
+.nav-actions button {
+  padding: 8px 15px;
+  background-color: #007aff; /* iOS Blue button */
   color: #fff;
-  padding: 10px;
+  border: none;
+  border-radius: 10px; /* More rounded buttons */
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-out;
+  white-space: nowrap;
+}
+
+.nav-actions a:hover,
+.nav-actions button:hover {
+  background-color: #005ce6; /* Darker blue on hover */
+  transform: translateY(-1px); /* Slight lift effect */
+}
+
+.nav-actions a.active {
+    background-color: #005ce6; /* Keep active button darker blue */
+}
+
+.nav-actions span {
+  color: #1c1c1e; /* Color for logged-in user email */
+  font-weight: 500;
+}
+
+.lang-switcher {
+  padding: 8px 12px;
+  border: 1px solid #d1d1d6; /* Subtle border */
+  border-radius: 10px; /* Rounded select box */
+  background-color: #fff;
+  color: #1c1c1e;
+  cursor: pointer;
+  appearance: none; /* Hide default arrow */
+  -webkit-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>'); /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 18px;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.lang-switcher:focus {
+  outline: none;
+  border-color: #007aff; /* Blue border on focus */
+}
+
+
+/* Main Content Sections */
+.main {
+  max-width: 960px; /* Slightly wider content area */
+  margin: 30px auto; /* More margin top/bottom */
+  padding: 0 20px;
+}
+
+.intro {
+  background-color: #fff;
+  padding: 40px; /* More padding */
+  border-radius: 15px; /* Significantly rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Soft shadow */
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.intro h1 {
+  font-size: 38px; /* Larger heading */
+  font-weight: 700;
+  color: #1c1c1e;
+  margin-bottom: 20px;
+}
+
+.intro p {
+  font-size: 18px; /* Larger paragraph text */
+  color: #3a3a3c;
+  margin-bottom: 15px;
+}
+
+/* Info Blocks for Index Page */
+.info-blocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px; /* Increased gap */
+  margin-top: 30px;
+}
+
+.block {
+  background-color: #fff;
+  padding: 30px; /* More padding */
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Soft shadow */
+  text-align: center;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out; /* Animation for hover */
+}
+
+.block:hover {
+  transform: translateY(-5px); /* Lift effect on hover */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1); /* More pronounced shadow on hover */
+}
+
+.block h2 {
+  font-size: 24px;
+  color: #1c1c1e;
+  margin-bottom: 15px;
+}
+
+.block p {
+  color: #555;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.block .button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007aff;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-out;
+}
+
+.block .button:hover {
+  background-color: #005ce6;
+  transform: translateY(-1px);
+}
+
+/* Forum and Knowledge Section Styles (general for lists of items) */
+.forum-section h1,
+.knowledge-section h1,
+.news-section h1 { /* Added news section for consistency */
+  font-size: 32px;
+  font-weight: 600;
+  color: #1c1c1e;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.post-item {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.post-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.post-item h3 {
+  font-size: 22px;
+  color: #007aff; /* Blue title for posts */
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.post-item p {
+  color: #3a3a3c;
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.post-item small {
+  color: #8e8e93; /* Lighter gray for metadata */
+  font-size: 14px;
+}
+
+/* Forms (Login, Register, Post) */
+form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  max-width: 400px; /* Confine form width */
+  margin: 30px auto;
+  text-align: left; /* Align labels to the left */
+}
+
+form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #1c1c1e;
+}
+
+form input[type="email"],
+form input[type="password"],
+form input[type="text"],
+form textarea {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: 1px solid #d1d1d6; /* Subtle border */
+  border-radius: 10px; /* Rounded input fields */
+  font-size: 16px;
+  background-color: #f9f9fb; /* Slightly off-white background for inputs */
+  color: #1c1c1e;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+form input:focus,
+form textarea:focus {
+  outline: none;
+  border-color: #007aff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2); /* Soft blue glow on focus */
+}
+
+form button[type="submit"] {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: #007aff;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-out;
+}
+
+form button[type="submit"]:hover {
+  background-color: #005ce6;
+  transform: translateY(-1px);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 25px;
+  background-color: #e5e5ea; /* Light gray footer */
+  color: #6a6a6a;
+  font-size: 14px;
+  margin-top: 40px; /* More space above footer */
+  border-top: 1px solid #d1d1d6; /* Subtle top border */
 }
 
 /* Responsive Layout */
 @media screen and (max-width: 768px) {
-  nav ul {
+  .header {
     flex-direction: column;
-    gap: 10px;
+    align-items: flex-start;
+    padding: 15px 15px;
   }
 
-  .logo img {
-    height: 36px;
+  .logo {
+    margin-bottom: 15px;
+    width: 100%;
+    justify-content: center; /* Center logo on mobile */
+  }
+
+  .navbar {
+    width: 100%;
+    flex-direction: column; /* Stack nav items */
+  }
+
+  .nav-main {
+    flex-direction: column;
+    width: 100%;
+    gap: 0; /* Remove gap for stacked menu */
+    margin-bottom: 15px;
+  }
+
+  .nav-main li {
+    width: 100%;
+    text-align: center; /* Center nav items */
+  }
+
+  .nav-main li a {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e5; /* Separator for mobile links */
+    border-radius: 0; /* No rounded corners for stacked links */
+  }
+
+  .nav-main li:last-child a {
+    border-bottom: none; /* No border for last item */
+  }
+
+  .dropdown-menu {
+    position: static; /* Make dropdown inline on mobile */
+    opacity: 1; /* Always visible when parent is clicked */
+    transform: translateY(0);
+    box-shadow: none;
+    border-radius: 0;
+    background-color: #f9f9fb; /* Lighter background for mobile dropdown */
+    border-top: 1px solid #e0e0e5;
+    padding: 0;
+  }
+
+  .dropdown-menu li a {
+    padding: 10px 25px; /* Indent dropdown items */
+    font-size: 16px;
+    border-bottom: 1px solid #efeff4;
+  }
+  .dropdown-menu li:last-child a {
+    border-bottom: none;
+  }
+
+  .nav-actions {
+    width: 100%;
+    justify-content: center; /* Center action buttons */
+    margin-left: 0;
+    margin-top: 15px;
+    flex-wrap: wrap; /* Allow wrapping for more buttons */
+    gap: 10px; /* Smaller gap for buttons */
+  }
+
+  .nav-actions a,
+  .nav-actions button,
+  .lang-switcher {
+    flex-grow: 1; /* Allow buttons to grow */
+    text-align: center;
+    max-width: calc(50% - 5px); /* Two buttons per row */
+  }
+
+  .main {
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+
+  .intro {
+    padding: 30px 20px;
+  }
+
+  .intro h1 {
+    font-size: 30px;
+  }
+
+  .intro p {
+    font-size: 16px;
+  }
+
+  form {
+    padding: 25px;
   }
 }
 
-/* Footer */
-footer {
-  background-color: #f5f5f5;
-  padding: 20px;
-  font-size: 14px;
-  color: #555;
-  text-align: center;
-}
+/* iOS Specific Overrides for input focus and tap highlights */
+@media not all and (min-resolution:.001dpcm) { @supports (-webkit-appearance:none) {
+  /* Safari specific styles if needed */
+  input[type="email"],
+  input[type="password"],
+  input[type="text"],
+  textarea {
+    -webkit-appearance: none; /* Remove default iOS input styling */
+  }
+}}
 
-/* QR Code styling */
-.qr-section {
-  text-align: center;
-  padding: 40px 0;
-}
+/* For a more unified iOS feel across all pages: */
+/* Ensure your HTML for navigation links looks like this: */
+/*
+<nav class="navbar">
+  <ul class="nav-main">
+    <li><a href="index.html" class="active">首页</a></li>
+    <li class="dropdown">
+      <a href="about.html">关于我们</a> // The main link should point to the page
+      <ul class="dropdown-menu">
+        <li><a href="about.html">公司介绍</a></li> // Dropdown item points to the same page for consistency
+      </ul>
+    </li>
+    ... (similar for other dropdowns)
+  </ul>
+  <div class="nav-actions" id="nav-actions">
+    <a href="contact.html">联系我们</a>
+    <a href="login.html">登录</a>
+    <select class="lang-switcher">
+      <option>简体中文</option>
+      <option>English</option>
+    </select>
+  </div>
+</nav>
+*/
 
-.qr-section img {
-  height: 160px;
-  width: auto;
-  margin-top: 10px;
-}
-
-/* Page layout */
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 20px;
-}
-
-/* Headings */
-h1, h2, h3 {
-  margin-bottom: 20px;
-  color: #222;
-}
-
-/* Button Styles */
-.button {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #0078d4;
-  color: #fff;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-}
-
-.button:hover {
-  background-color: #005ea2;
-}
+/* And ensure the renderNav function handles adding 'active' class correctly */
+/* For '联系我们' and '登录' buttons in nav-actions:
+   If the current page is contact.html, add 'active' class to contact.html link.
+   If the current page is login.html, add 'active' class to login.html link.
+   Example:
+   const currentPath = window.location.pathname.split('/').pop();
+   if (currentPath === 'contact.html') {
+     navActions.querySelector('a[href="contact.html"]').classList.add('active');
+   }
+   if (currentPath === 'login.html') {
+     navActions.querySelector('a[href="login.html"]').classList.add('active');
+   }
+*/
