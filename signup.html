@@ -48,10 +48,22 @@
       <h1>注册账户</h1>
       <p class="message" id="signup-message"></p>
       <form id="signup-form">
-        <input type="text" id="invite-code" placeholder="邀请码" required />
-        <input type="email" id="email" placeholder="邮箱" required />
-        <input type="text" id="username" placeholder="昵称 (用于论坛显示)" required minlength="3" maxlength="20" />
-        <input type="password" id="password" placeholder="密码" required />
+        <div class="form-group">
+          <label for="email"><span class="required">*</span> 邮箱:</label>
+          <input type="email" id="email" placeholder="请输入您的邮箱" required />
+        </div>
+        <div class="form-group">
+          <label for="username"><span class="required">*</span> 昵称:</label>
+          <input type="text" id="username" placeholder="用于论坛显示 (3-20字符)" required minlength="3" maxlength="20" />
+        </div>
+        <div class="form-group">
+          <label for="password"><span class="required">*</span> 密码:</label>
+          <input type="password" id="password" placeholder="请输入密码" required />
+        </div>
+        <div class="form-group">
+          <label for="invite-code">邀请码 (可选):</label>
+          <input type="text" id="invite-code" placeholder="填写可获得会员等级" />
+        </div>
         <button type="submit">注册</button>
       </form>
       <p>已有账户？<a href="login.html">立即登录</a></p>
@@ -84,7 +96,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Supabase 初始化 (通常可以抽象到一个单独的 JS 文件)
+    // Supabase 初始化
     const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -99,12 +111,12 @@
       e.preventDefault();
       signupMessage.textContent = ''; // 清空之前的消息
 
-      const inviteCode = document.getElementById('invite-code').value.trim();
       const email = document.getElementById('email').value.trim();
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
+      // 邀请码现在是可选的，即使为空也正常获取
+      const inviteCode = document.getElementById('invite-code').value.trim(); 
 
-      // 这里只做前端的初步格式验证，邀请码的有效性交由后端 Edge Function 验证
       if (username.length < 3 || username.length > 20) {
         signupMessage.textContent = '昵称长度需在3-20个字符之间。';
         signupMessage.style.color = 'var(--error-color)';
@@ -118,7 +130,8 @@
           options: {
             data: { 
               username: username,
-              invite_code: inviteCode // 将邀请码作为用户元数据传递
+              // 只有当 inviteCode 非空时才传递
+              ...(inviteCode && { invite_code: inviteCode }) 
             }
           }
         });
@@ -126,15 +139,24 @@
         if (error) {
           if (error.message.includes('User already registered')) {
             signupMessage.textContent = '该邮箱已注册，请直接登录或尝试找回密码。';
-          } else {
+          } else if (error.message.includes('Username already taken.')) { 
+            signupMessage.textContent = '该昵称已被使用，请更换一个。';
+          }
+          // 现在 Edge Function 会直接拒绝无效邀请码的用户创建 profile，
+          // 但 Auth.signUp 本身可能不会直接返回"无效邀请码"的错误，
+          // 而是允许用户注册成功但 profiles 表创建失败。
+          // 更严谨的做法是提供一个单独的 Edge Function 验证邀请码，先验证通过再走 Auth.signUp。
+          // 目前的方案：如果 Edge Function 拒绝了，用户仍然会收到激活邮件，但其 profiles 不会创建。
+          // 前端显示错误需要 Edge Function 抛出并传递到这里，Supabase Auth 的错误码不是直接的。
+          // 这里的错误判断主要针对 Auth 本身的错误。
+          else {
             signupMessage.textContent = '注册失败：' + error.message;
           }
           signupMessage.style.color = 'var(--error-color)';
         } else {
-          // 注册成功后，Supabase 会根据 Auth 设置发送验证邮件
           signupMessage.style.color = 'var(--success-color)';
           signupMessage.textContent = '注册成功！请前往您的邮箱 ' + email + ' 激活账户。';
-          signupForm.reset(); // 清空表单
+          signupForm.reset(); 
         }
       } catch (err) {
         console.error('An unexpected error occurred:', err);

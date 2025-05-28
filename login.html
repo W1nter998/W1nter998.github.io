@@ -3,102 +3,178 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="登录鋆赫财税账户，访问您的个人中心和社区论坛。">
-  <meta name="keywords" content="登录, 账户登录, 用户认证, 鋆赫财税登录">
-  <title>登录 - 鋆赫财税</title>
+  <title>用户登录 - 鋆赫财税论坛</title>
   <link rel="stylesheet" href="style.css" />
-  <script type="module" src="supabase.js"></script>
-  <script type="module" src="navigation.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <div id="page-loading-overlay" class="page-loading-overlay">
-    <div class="spinner"></div>
-  </div>
-
   <header class="header">
     <div class="logo">
       <a href="index.html">
         <img src="logo.png" alt="鋆赫财税 Logo" />
       </a>
-      <span>鋆赫财税</span>
+      <span>鋆赫论坛</span>
     </div>
-    <div id="nav-container"></div>
+    <nav>
+      <ul>
+        <li><a href="index.html">首页</a></li>
+        <li>
+          <a href="#">服务</a>
+          <ul>
+            <li><a href="service-accounting.html">代理记账</a></li>
+            <li><a href="service-tax.html">税务咨询</a></li>
+          </ul>
+        </li>
+        <li><a href="news.html">新闻</a></li>
+        <li><a href="contact.html">联系我们</a></li>
+      </ul>
+    </nav>
+    <ul class="nav-actions">
+      <li><a href="signup.html" class="button">注册</a></li>
+      <li>
+        <select class="lang-switcher">
+          <option>中文</option>
+          <option>EN</option>
+        </select>
+      </li>
+    </ul>
+    <button class="menu-toggle" aria-label="Toggle menu">
+      <i class="fas fa-bars"></i>
+    </button>
   </header>
 
-  <main class="main container">
-    <section class="intro">
-      <h1>登录鋆赫财税账户</h1>
+  <main class="main">
+    <div class="auth-form-container">
+      <h1>用户登录</h1>
+      <p class="message" id="login-message"></p>
       <form id="login-form">
-        <label for="email">邮箱:</label>
-        <input type="email" id="email" required placeholder="请输入您的邮箱">
-
-        <label for="password">密码:</label>
-        <input type="password" id="password" required placeholder="请输入您的密码">
-
+        <div class="form-group">
+          <label for="email"><span class="required">*</span> 邮箱:</label>
+          <input type="email" id="email" placeholder="请输入您的邮箱" required />
+        </div>
+        <div class="form-group">
+          <label for="password"><span class="required">*</span> 密码:</label>
+          <input type="password" id="password" placeholder="请输入密码" required />
+        </div>
         <button type="submit">登录</button>
-        <p id="login-message" class="form-message" style="display: none;"></p>
-        <p style="text-align: center; margin-top: 20px;">
-          还没有账户？<a href="signup.html" style="color: var(--primary-color);">立即注册</a>
-        </p>
       </form>
-    </section>
+      <p>
+        <a href="forgot_password.html">忘记密码？</a>
+      </p>
+      <p>
+        没有账户？<a href="signup.html">立即注册</a>
+      </p>
+    </div>
   </main>
 
   <footer class="footer">
-    <p>© 2025 杭州鋆赫财税咨询有限公司 版权所有</p>
+    © 2025 鋆赫财税咨询有限公司
   </footer>
 
-  <script type="module">
-    import { supabase } from './supabase.js';
-    import { renderNavigationBar } from './navigation.js';
+  <div class="mobile-nav" id="mobile-nav">
+    <button class="close-btn" aria-label="Close menu">
+      <i class="fas fa-times"></i>
+    </button>
+    <ul>
+      <li><a href="index.html">首页</a></li>
+      <li><a href="service-accounting.html">代理记账</a></li>
+      <li><a href="service-tax.html">税务咨询</a></li>
+      <li><a href="news.html">新闻</a></li>
+      <li><a href="contact.html">联系我们</a></li>
+      <li><a href="signup.html">注册</a></li>
+      <li>
+        <select class="lang-switcher-mobile">
+          <option>中文</option>
+          <option>EN</option>
+        </select>
+      </li>
+    </ul>
+  </div>
 
-    document.addEventListener('DOMContentLoaded', () => {
-        // 渲染导航栏，高亮 'login.html'
-        renderNavigationBar('nav-container', 'login.html');
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Supabase 初始化
+    const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const loadingOverlay = document.getElementById('page-loading-overlay');
-        loadingOverlay.classList.add('hidden'); // 页面加载后隐藏加载覆盖层
+    const loginForm = document.getElementById('login-form');
+    const loginMessage = document.getElementById('login-message');
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileNav = document.getElementById('mobile-nav');
+    const closeBtn = document.querySelector('.close-btn');
 
-        const loginForm = document.getElementById('login-form');
-        const loginMessage = document.getElementById('login-message');
+    // 处理登录表单提交
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginMessage.textContent = ''; // 清空之前的消息
 
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            loginMessage.style.display = 'none'; // 隐藏之前的消息
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
 
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-            if (!email || !password) {
-                loginMessage.classList.remove('success');
-                loginMessage.classList.add('error');
-                loginMessage.textContent = '邮箱和密码不能为空。';
-                loginMessage.style.display = 'block';
-                return;
-            }
-
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                loginMessage.classList.remove('success');
-                loginMessage.classList.add('error');
-                loginMessage.textContent = `登录失败：${error.message}`;
-                loginMessage.style.display = 'block';
-                console.error('登录错误:', error.message);
-            } else {
-                loginMessage.classList.remove('error');
-                loginMessage.classList.add('success');
-                loginMessage.textContent = '登录成功！正在跳转...';
-                loginMessage.style.display = 'block';
-                console.log('登录成功:', data);
-                // 登录成功后跳转到首页或其他需要登录的页面
-                window.location.href = 'index.html'; // 或 'forum.html'
-            }
-        });
+        if (error) {
+          loginMessage.textContent = '登录失败：' + error.message;
+          loginMessage.style.color = 'var(--error-color)';
+        } else {
+          loginMessage.textContent = '登录成功！正在跳转...';
+          loginMessage.style.color = 'var(--success-color)';
+          // 登录成功后重定向到主页或其他需要登录的页面
+          window.location.href = 'index.html'; 
+        }
+      } catch (err) {
+        console.error('An unexpected error occurred:', err);
+        loginMessage.textContent = '登录过程中发生未知错误。';
+        loginMessage.style.color = 'var(--error-color)';
+      }
     });
+
+    // 手机菜单切换逻辑
+    menuToggle.addEventListener('click', () => {
+      mobileNav.classList.add('open');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      mobileNav.classList.remove('open');
+    });
+
+    // 点击菜单外部关闭菜单
+    document.addEventListener('click', (e) => {
+        if (!mobileNav.contains(e.target) && !menuToggle.contains(e.target) && mobileNav.classList.contains('open')) {
+            mobileNav.classList.remove('open');
+        }
+    });
+
+    // 阻止点击手机菜单内部时关闭菜单 (可选，但推荐)
+    mobileNav.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
+    // 语言切换器逻辑 (桌面端和移动端可能需要同步)
+    const desktopLangSwitcher = document.querySelector('.lang-switcher');
+    const mobileLangSwitcher = document.querySelector('.lang-switcher-mobile');
+
+    if (desktopLangSwitcher) {
+      desktopLangSwitcher.addEventListener('change', (e) => {
+        console.log('Desktop language changed to:', e.target.value);
+        if (mobileLangSwitcher) {
+          mobileLangSwitcher.value = e.target.value; // 同步移动端选择
+        }
+        // 在这里添加切换语言的逻辑
+      });
+    }
+
+    if (mobileLangSwitcher) {
+      mobileLangSwitcher.addEventListener('change', (e) => {
+        console.log('Mobile language changed to:', e.target.value);
+        if (desktopLangSwitcher) {
+          desktopLangSwitcher.value = e.target.value; // 同步桌面端选择
+        }
+        // 在这里添加切换语言的逻辑
+      });
+    }
   </script>
 </body>
 </html>

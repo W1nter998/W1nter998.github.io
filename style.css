@@ -343,3 +343,40 @@ h1, h2, h3 {
     margin: var(--spacing-md) auto;
   }
 }
+/* 新增的表单组样式 */
+.auth-form-container form .form-group {
+    margin-bottom: 15px; /* 增加组间距 */
+    text-align: left; /* 标签和星号左对齐 */
+}
+
+.auth-form-container form .form-group label {
+    display: block; /* 标签独占一行 */
+    margin-bottom: 5px; /* 标签和输入框的间距 */
+    font-weight: bold; /* 标签加粗 */
+    color: var(--text-color-light); /* 标签颜色 */
+}
+
+/* 红色星号样式 */
+.auth-form-container .required {
+    color: var(--error-color); /* 使用预定义的红色 */
+    margin-right: 4px; /* 星号与文本的间距 */
+    font-size: 1.1em; /* 星号稍微大一点 */
+}
+
+/* 调整输入框样式以适应新结构 */
+.auth-form-container form input[type="email"],
+.auth-form-container form input[type="password"],
+.auth-form-container form input[type="text"] {
+    width: 100%; /* 输入框宽度100% */
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-sizing: border-box; /* 边框和内边距包含在宽度内 */
+    font-size: 1em;
+}
+
+/* 确保消息提示保持居中 */
+.auth-form-container .message {
+    text-align: center;
+    margin-bottom: 15px;
+}
