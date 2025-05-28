@@ -6,26 +6,17 @@
 window.SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
 window.SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
 
-// 在 DOMContentLoaded 事件中初始化 Supabase 客户端
-document.addEventListener('DOMContentLoaded', () => {
-  // 检查全局的 `supabase` 对象是否存在 (由 Supabase SDK 加载后暴露)
-  if (typeof supabase !== 'undefined' && supabase.createClient) {
-    // 使用全局的 `supabase` 对象来创建客户端实例
-    window.supabase = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY);
-    console.log("Global Supabase client initialized from init-supabase.js.");
-  } else {
-    // 如果 Supabase SDK 没有加载或未暴露 createClient 方法
-    console.error("Supabase SDK (global 'supabase' object) not loaded or 'createClient' method not found in init-supabase.js.");
-    // 页面上的错误消息可能会在 signup.html 的 DOMContentLoaded 逻辑中处理
-  }
-});
+// 声明全局的 supabase 客户端变量
+// 确保全局的 `supabase` 对象 (由 Supabase SDK 加载后暴露) 已经存在
+if (typeof supabase !== 'undefined' && supabase.createClient) {
+  // 使用全局的 `supabase` 对象来创建客户端实例
+  window.supabase = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY);
+  console.log("Global Supabase client initialized from init-supabase.js.");
+} else {
+  // 如果 Supabase SDK 没有加载或未暴露 createClient 方法
+  console.error("Error: Supabase SDK (global 'supabase' object) not loaded or 'createClient' method not found in init-supabase.js.");
+  // 可以在这里设置一个标志或全局错误消息，以便前端在 DOMContentLoaded 中检查
+}
 
-// 作为额外的保障，也可以在 window.onload 中再次检查和初始化
-window.onload = () => {
-  if (typeof window.supabase === 'undefined' || !window.supabase.auth) { // 只有在没有初始化的情况下才尝试
-    if (typeof supabase !== 'undefined' && supabase.createClient) {
-      window.supabase = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_KEY);
-      console.log("Global Supabase client initialized (fallback) from init-supabase.js.");
-    }
-  }
-};
+// 注意：这里不再需要 DOMContentLoaded 或 window.onload 监听器，
+// 因为 `defer` 属性已经保证了脚本的加载和执行顺序。
