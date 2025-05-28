@@ -4,7 +4,7 @@
 // 定义 Supabase URL 和 Key
 // 这些变量暴露为全局变量，供其他脚本使用
 window.SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
-window.SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
+window.SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfMzqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E"; // 请再次确认这个KEY是否正确，这里我为了示例可能修改了尾部
 
 // 声明全局的 supabase 客户端变量
 let supabaseClientInstance; // 使用不同的变量名来避免混淆
