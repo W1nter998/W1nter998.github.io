@@ -114,8 +114,7 @@
       const email = document.getElementById('email').value.trim();
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value.trim();
-      // 邀请码现在是可选的，即使为空也正常获取
-      const inviteCode = document.getElementById('invite-code').value.trim(); 
+      const inviteCode = document.getElementById('invite-code').value.trim();
 
       if (username.length < 3 || username.length > 20) {
         signupMessage.textContent = '昵称长度需在3-20个字符之间。';
@@ -124,14 +123,15 @@
       }
       
       try {
-        const { data, error } = await supabase.auth.signUp({ 
-          email, 
+        const { data, error } = await supabase.auth.signUp({
+          email,
           password,
+          // 在这里传递 username 和 invite_code 给 user_metadata
+          // 这样在 Edge Function 中可以通过 data.user.user_metadata 访问
           options: {
-            data: { 
+            data: {
               username: username,
-              // 只有当 inviteCode 非空时才传递
-              ...(inviteCode && { invite_code: inviteCode }) 
+              ...(inviteCode && { invite_code: inviteCode })
             }
           }
         });
@@ -139,24 +139,67 @@
         if (error) {
           if (error.message.includes('User already registered')) {
             signupMessage.textContent = '该邮箱已注册，请直接登录或尝试找回密码。';
-          } else if (error.message.includes('Username already taken.')) { 
+          } else if (error.message.includes('Username already taken.')) {
+            // 这个错误现在可能由 Edge Function 返回，如果前端直接调用。
+            // 但如果 Auth.signUp 层面就提示昵称被占用，则也需要处理。
             signupMessage.textContent = '该昵称已被使用，请更换一个。';
           }
-          // 现在 Edge Function 会直接拒绝无效邀请码的用户创建 profile，
-          // 但 Auth.signUp 本身可能不会直接返回"无效邀请码"的错误，
-          // 而是允许用户注册成功但 profiles 表创建失败。
-          // 更严谨的做法是提供一个单独的 Edge Function 验证邀请码，先验证通过再走 Auth.signUp。
-          // 目前的方案：如果 Edge Function 拒绝了，用户仍然会收到激活邮件，但其 profiles 不会创建。
-          // 前端显示错误需要 Edge Function 抛出并传递到这里，Supabase Auth 的错误码不是直接的。
-          // 这里的错误判断主要针对 Auth 本身的错误。
           else {
             signupMessage.textContent = '注册失败：' + error.message;
           }
           signupMessage.style.color = 'var(--error-color)';
         } else {
-          signupMessage.style.color = 'var(--success-color)';
-          signupMessage.textContent = '注册成功！请前往您的邮箱 ' + email + ' 激活账户。';
-          signupForm.reset(); 
+          // ====== 新增：手动调用 Edge Function 来创建 profiles ======
+          if (data.user) {
+            const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/handle-new-user-profile`;
+            const payload = {
+              type: 'INSERT', // 模拟 Auth Webhook 类型
+              table: 'users', // 模拟 Auth Webhook 表名
+              record: {
+                id: data.user.id,
+                email: data.user.email,
+                user_metadata: {
+                  username: username,
+                  ...(inviteCode && { invite_code: inviteCode })
+                }
+              }
+            };
+
+            const response = await fetch(edgeFunctionUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                // 重要：从前端调用 Edge Function，需要传递用户当前的 JWT
+                // 否则 Edge Function 内部的 supabaseAdmin 客户端将无法识别用户
+                'Authorization': `Bearer ${data.session?.access_token || SUPABASE_KEY}` 
+                // 如果用户尚未完全登录（例如需要邮箱验证），则 session.access_token 可能为空。
+                // 此时，如果 Edge Function 内部依赖 Auth 的 context，可能会有问题。
+                // 但是我们的 handle-new-user-profile 函数内部用的是 service_role_key，所以不需要用户JWT。
+                // 仅传递 API Key 作为 fallback 或一般请求头。
+              },
+              body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+              console.error('Error calling Edge Function:', result.error);
+              signupMessage.textContent = '注册成功，但用户资料创建失败：' + (result.message || result.error || '未知错误');
+              signupMessage.style.color = 'var(--error-color)';
+              // 尽管 profiles 创建失败，用户账户本身是注册成功的，仍然引导其激活邮箱
+              signupMessage.textContent += ' 请前往您的邮箱 ' + email + ' 激活账户。';
+            } else {
+              console.log('Edge Function called successfully:', result);
+              signupMessage.style.color = 'var(--success-color)';
+              signupMessage.textContent = '注册成功！请前往您的邮箱 ' + email + ' 激活账户。';
+              signupForm.reset();
+            }
+          } else {
+            // 如果 data.user 为空，可能是注册失败但 error 对象为空的情况
+            signupMessage.textContent = '注册成功，但未返回用户数据，请检查邮箱。';
+            signupMessage.style.color = 'var(--warning-color)';
+          }
+          // ====== 结束：手动调用 Edge Function ======
         }
       } catch (err) {
         console.error('An unexpected error occurred:', err);
