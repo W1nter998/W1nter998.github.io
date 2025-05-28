@@ -95,7 +95,7 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
-  <script src="supabase.js" defer></script> 
+  <script src="supabase.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
       // 确保 supabase 客户端已经被全局初始化（在 supabase.js 中）
@@ -152,7 +152,8 @@
           } else {
             // ====== 新增：手动调用 Edge Function 来创建 profiles ======
             if (data.user) {
-              const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/handle-new-user-profile`;
+              // 从 window.SUPABASE_URL 获取 URL，因为在 supabase.js 中已设置为全局变量
+              const edgeFunctionUrl = `${window.SUPABASE_URL}/functions/v1/handle-new-user-profile`; 
               const payload = {
                 type: 'INSERT', // 模拟 Auth Webhook 类型
                 table: 'users', // 模拟 Auth Webhook 表名
@@ -170,7 +171,8 @@
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${data.session?.access_token || SUPABASE_KEY}`
+                  // 使用 Supabase 客户端的 access_token，如果可用的话
+                  'Authorization': `Bearer ${data.session?.access_token || SUPABASE_KEY}` 
                 },
                 body: JSON.stringify(payload)
               });
