@@ -2,175 +2,303 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="鋆赫财税，提供专业的公司注册、代理记账、税务筹划、工商年报、财务咨询等一站式企业财税服务。助力中小企业安心经营，合规发展。">
-  <meta name="keywords" content="鋆赫财税, 财税服务, 公司注册, 代理记账, 税务筹划, 工商年报, 财务咨询, 杭州财税, 企业服务">
-  <title>鋆赫财税 - 专业企业财税服务</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>鋆赫财税论坛 - 首页</title>
   <link rel="stylesheet" href="style.css" />
-  <script type="module" src="supabase.js"></script>
-  <script type="module" src="navigation.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <div id="page-loading-overlay" class="page-loading-overlay">
-    <div class="spinner"></div>
-  </div>
-
   <header class="header">
     <div class="logo">
       <a href="index.html">
         <img src="logo.png" alt="鋆赫财税 Logo" />
       </a>
-      <span>鋆赫财税</span>
+      <span>鋆赫论坛</span>
     </div>
-    <div id="nav-container"></div>
+    <nav>
+      <ul>
+        <li><a href="index.html">首页</a></li>
+        <li>
+          <a href="#">服务</a>
+          <ul>
+            <li><a href="service-accounting.html">代理记账</a></li>
+            <li><a href="service-tax.html">税务咨询</a></li>
+          </ul>
+        </li>
+        <li><a href="news.html">新闻</a></li>
+        <li><a href="contact.html">联系我们</a></li>
+      </ul>
+    </nav>
+    <ul class="nav-actions" id="nav-actions-desktop">
+      <li>
+        <select class="lang-switcher">
+          <option>中文</option>
+          <option>EN</option>
+        </select>
+      </li>
+    </ul>
+    <button class="menu-toggle" aria-label="Toggle menu">
+      <i class="fas fa-bars"></i>
+    </button>
   </header>
 
-  <main class="main container">
-    <section class="intro">
-      <h1>欢迎来到鋆赫财税</h1>
-      <p>我们提供专业的企业财税服务，助力您安心经营，合规发展。</p>
-      <p style="margin-top: 15px;">
-        <a href="services.html" class="nav-action-button">了解我们的服务</a>
-      </p>
+  <main class="main">
+    <section class="hero">
+      <h1>欢迎来到鋆赫财税论坛</h1>
+      <p>与行业专家和同行交流，获取最新财税资讯。</p>
+      <a href="signup.html" class="button">立即注册</a>
     </section>
 
-    <section class="home-section">
-      <h2>我们的优势</h2>
-      <div class="advantages-grid">
-        <div class="advantage-item">
-          <h3>专业团队</h3>
-          <p>资深财税专家，提供精准高效的服务。</p>
+    <section class="features">
+      <h2>我们的特色</h2>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <h3>专业问答</h3>
+          <p>解答您的财税疑难</p>
         </div>
-        <div class="advantage-item">
-          <h3>一站式服务</h3>
-          <p>从注册到年报，全面解决您的财税难题。</p>
+        <div class="feature-item">
+          <h3>行业新闻</h3>
+          <p>掌握最新政策动态</p>
         </div>
-        <div class="advantage-item">
-          <h3>高效便捷</h3>
-          <p>流程优化，节省您的宝贵时间。</p>
-        </div>
-        <div class="advantage-item">
-          <h3>风险控制</h3>
-          <p>合法合规，有效规避财税风险。</p>
+        <div class="feature-item">
+          <h3>专家直播</h3>
+          <p>面对面学习财税知识</p>
         </div>
       </div>
     </section>
 
-    <section class="home-section">
-      <h2>最新动态</h2>
-      <div id="latest-news" class="post-list">
-        <p class="loading-spinner">加载最新新闻...</p>
-      </div>
-      <p style="text-align: center; margin-top: 20px;">
-        <a href="news.html" class="nav-action-button">查看更多新闻</a>
-      </p>
+    <section class="qr-section">
+      <h2>扫码关注我们</h2>
+      <img src="qr_code.png" alt="QR Code" />
+      <p>扫描二维码，加入我们的官方微信群，获取更多福利。</p>
     </section>
-
-    <section class="home-section">
-      <h2>热门讨论</h2>
-      <div id="hot-topics" class="post-list">
-        <p class="loading-spinner">加载热门讨论...</p>
-      </div>
-      <p style="text-align: center; margin-top: 20px;">
-        <a href="forum.html" class="nav-action-button">前往论坛</a>
-      </p>
-    </section>
-
   </main>
 
   <footer class="footer">
-    <p>© 2025 杭州鋆赫财税咨询有限公司 版权所有</p>
+    © 2025 鋆赫财税咨询有限公司
   </footer>
 
-  <script type="module">
-    import { renderNavigationBar } from './navigation.js';
-    import { supabase } from './supabase.js';
+  <div class="mobile-nav" id="mobile-nav">
+    <button class="close-btn" aria-label="Close menu">
+      <i class="fas fa-times"></i>
+    </button>
+    <ul id="nav-actions-mobile">
+      <li><a href="index.html">首页</a></li>
+      <li><a href="service-accounting.html">代理记账</a></li>
+      <li><a href="service-tax.html">税务咨询</a></li>
+      <li><a href="news.html">新闻</a></li>
+      <li><a href="contact.html">联系我们</a></li>
+      <li>
+        <select class="lang-switcher-mobile">
+          <option>中文</option>
+          <option>EN</option>
+        </select>
+      </li>
+    </ul>
+  </div>
 
-    document.addEventListener('DOMContentLoaded', async () => {
-        // 渲染导航栏
-        renderNavigationBar('nav-container', 'index.html');
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Supabase 初始化 (这是所有页面共用的配置，未来可以考虑独立成一个文件)
+    const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const loadingOverlay = document.getElementById('page-loading-overlay');
-        loadingOverlay.classList.add('hidden'); // 页面加载后隐藏加载覆盖层
+    const navActionsDesktop = document.getElementById('nav-actions-desktop');
+    const navActionsMobile = document.getElementById('nav-actions-mobile');
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileNav = document.getElementById('mobile-nav');
+    const closeBtn = document.querySelector('.close-btn');
 
-        // 加载最新新闻
-        async function loadLatestNews() {
-            const newsContainer = document.getElementById('latest-news');
-            newsContainer.innerHTML = '<p class="loading-spinner">加载最新新闻...</p>';
-            const { data: posts, error } = await supabase
-                .from('posts')
-                .select('id, title, content, created_at, category')
-                .eq('category', 'news') // 假设新闻类别为 'news'
-                .order('created_at', { ascending: false })
-                .limit(3); // 只显示最新的3条
+    // 处理用户登录状态的显示
+    async function updateAuthUI(session) {
+      // 清空当前的登录/注册按钮，准备插入新的UI
+      navActionsDesktop.innerHTML = ''; 
+      // 保留桌面端的语言切换器
+      const desktopLangSwitcherLi = document.createElement('li');
+      desktopLangSwitcherLi.innerHTML = `
+        <select class="lang-switcher">
+          <option>中文</option>
+          <option>EN</option>
+        </select>
+      `;
+      navActionsDesktop.appendChild(desktopLangSwitcherLi);
 
-            if (error) {
-                newsContainer.innerHTML = `<p class="form-message error">加载新闻失败：${error.message}</p>`;
-                return;
-            }
+      // 手机端的列表清空，并准备插入菜单项
+      // 注意：这里我们保留了手机菜单固定的链接，只在顶部插入动态登录/注册或用户信息
+      const mobileNavExistingItems = Array.from(navActionsMobile.children).filter(child => 
+        !child.id.startsWith('dynamic-auth-item') // 过滤掉之前的动态插入项
+      );
+      navActionsMobile.innerHTML = ''; // 清空所有内容
+      
+      // 手机端语言切换器
+      const mobileLangSwitcherLi = document.createElement('li');
+      mobileLangSwitcherLi.innerHTML = `
+        <select class="lang-switcher-mobile">
+          <option>中文</option>
+          <option>EN</option>
+        </select>
+      `;
+      navActionsMobile.appendChild(mobileLangSwitcherLi); // 先把语言切换器加回去
 
-            if (!posts.length) {
-                newsContainer.innerHTML = '<p>暂无最新新闻。</p>';
-                return;
-            }
+      mobileNavExistingItems.forEach(item => { // 再把其他固定菜单项加回去
+        if (!item.querySelector('.lang-switcher-mobile')) { // 避免重复添加语言切换器
+            navActionsMobile.appendChild(item);
+        }
+      });
 
-            newsContainer.innerHTML = ''; // 清空加载提示
-            posts.forEach(post => {
-                const div = document.createElement('div');
-                div.className = 'post-item';
-                div.innerHTML = `
-                    <a href="post-detail.html?id=${post.id}">
-                        <h3>${post.title}</h3>
-                        <p>${post.content}</p>
-                        <small>发布于 ${new Date(post.created_at).toLocaleDateString()}</small>
-                    </a>
-                `;
-                newsContainer.appendChild(div);
-            });
+
+      if (session) {
+        // 用户已登录
+        const user = session.user;
+        const userId = user.id;
+
+        // 从 profiles 表获取 username
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', userId)
+          .single();
+
+        let username = user.email ? user.email.split('@')[0] : '用户'; // 默认值
+        if (profile && profile.username) {
+          username = profile.username;
+        } else if (profileError) {
+          console.error('Error fetching profile:', profileError.message);
         }
 
-        // 加载热门讨论（这里我们简单取最新的3条论坛帖子）
-        async function loadHotTopics() {
-            const topicsContainer = document.getElementById('hot-topics');
-            topicsContainer.innerHTML = '<p class="loading-spinner">加载热门讨论...</p>';
-            const { data: posts, error } = await supabase
-                .from('posts')
-                .select('id, title, content, created_at, category')
-                .eq('category', 'forum') // 假设论坛类别为 'forum'
-                .order('created_at', { ascending: false })
-                .limit(3); // 只显示最新的3条
+        // 桌面端显示欢迎信息和退出按钮
+        const welcomeItemDesktop = document.createElement('li');
+        welcomeItemDesktop.id = 'dynamic-auth-item-desktop';
+        welcomeItemDesktop.innerHTML = `
+          <span>欢迎, ${username}!</span>
+          <a href="#" id="logout-button-desktop" class="button">退出登录</a>
+        `;
+        navActionsDesktop.prepend(welcomeItemDesktop); // 放在语言切换器之前
 
-            if (error) {
-                topicsContainer.innerHTML = `<p class="form-message error">加载热门讨论失败：${error.message}</p>`;
-                return;
-            }
+        // 手机端显示欢迎信息和退出按钮
+        const welcomeItemMobile = document.createElement('li');
+        welcomeItemMobile.id = 'dynamic-auth-item-mobile';
+        welcomeItemMobile.innerHTML = `
+          <a href="#">欢迎, ${username}!</a>
+          <a href="#" id="logout-button-mobile">退出登录</a>
+        `;
+        navActionsMobile.prepend(welcomeItemMobile); // 放在最顶部
 
-            if (!posts.length) {
-                topicsContainer.innerHTML = '<p>暂无热门讨论，快来发帖吧！</p>';
-                return;
-            }
+        // 绑定退出登录事件
+        document.getElementById('logout-button-desktop').addEventListener('click', handleLogout);
+        document.getElementById('logout-button-mobile').addEventListener('click', handleLogout);
 
-            topicsContainer.innerHTML = ''; // 清空加载提示
-            posts.forEach(post => {
-                const div = document.createElement('div');
-                div.className = 'post-item';
-                div.innerHTML = `
-                    <a href="post-detail.html?id=${post.id}">
-                        <h3>${post.title}</h3>
-                        <p>${post.content}</p>
-                        <small>发布于 ${new Date(post.created_at).toLocaleDateString()}</small>
-                    </a>
-                `;
-                topicsContainer.appendChild(div);
-            });
-        }
+        // 更新用户最后活跃时间 (每当页面加载且用户登录时)
+        await supabase
+            .from('profiles')
+            .update({ last_active_at: new Date().toISOString() })
+            .eq('id', userId);
 
-        // 同时加载数据
-        await Promise.all([
-            loadLatestNews(),
-            loadHotTopics()
-        ]);
+      } else {
+        // 用户未登录
+        // 桌面端显示登录/注册按钮
+        const loginItemDesktop = document.createElement('li');
+        loginItemDesktop.id = 'dynamic-auth-item-desktop';
+        loginItemDesktop.innerHTML = `
+          <a href="login.html" class="button">登录</a>
+        `;
+        const signupItemDesktop = document.createElement('li');
+        signupItemDesktop.innerHTML = `
+          <a href="signup.html" class="button">注册</a>
+        `;
+        navActionsDesktop.prepend(signupItemDesktop); // 注册在登录之前
+        navActionsDesktop.prepend(loginItemDesktop);
+
+        // 手机端显示登录/注册链接
+        const loginItemMobile = document.createElement('li');
+        loginItemMobile.id = 'dynamic-auth-item-mobile';
+        loginItemMobile.innerHTML = `<a href="login.html">登录</a>`;
+        const signupItemMobile = document.createElement('li');
+        signupItemMobile.innerHTML = `<a href="signup.html">注册</a>`;
+        navActionsMobile.prepend(signupItemMobile); // 注册在登录之前
+        navActionsMobile.prepend(loginItemMobile);
+      }
+
+      // 重新绑定语言切换器，因为 DOM 可能被替换了
+      const desktopLangSwitcher = document.querySelector('.lang-switcher');
+      const mobileLangSwitcher = document.querySelector('.lang-switcher-mobile');
+      if (desktopLangSwitcher) {
+        desktopLangSwitcher.addEventListener('change', (e) => {
+          console.log('Desktop language changed to:', e.target.value);
+          if (mobileLangSwitcher) {
+            mobileLangSwitcher.value = e.target.value; // 同步移动端选择
+          }
+          // 在这里添加切换语言的逻辑
+        });
+      }
+      if (mobileLangSwitcher) {
+        mobileLangSwitcher.addEventListener('change', (e) => {
+          console.log('Mobile language changed to:', e.target.value);
+          if (desktopLangSwitcher) {
+            desktopLangSwitcher.value = e.target.value; // 同步桌面端选择
+          }
+          // 在这里添加切换语言的逻辑
+        });
+      }
+    }
+
+    // 退出登录函数
+    async function handleLogout() {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('退出登录失败:', error.message);
+        alert('退出登录失败: ' + error.message);
+      } else {
+        console.log('已成功退出登录');
+        // 退出登录后刷新UI
+        updateAuthUI(null);
+        // 可选：重定向到登录页或主页
+        // window.location.href = 'login.html';
+      }
+    }
+
+    // 监听认证状态变化
+    supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event, session);
+      updateAuthUI(session);
     });
+
+    // 页面加载时立即检查会话
+    async function checkSessionAndLoadUI() {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error("Error getting session:", error.message);
+        updateAuthUI(null); // 即使有错误也尝试更新UI为未登录状态
+      } else {
+        updateAuthUI(session);
+      }
+    }
+
+    // 页面加载完成后执行
+    document.addEventListener('DOMContentLoaded', checkSessionAndLoadUI);
+
+    // 手机菜单切换逻辑
+    menuToggle.addEventListener('click', () => {
+      mobileNav.classList.add('open');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      mobileNav.classList.remove('open');
+    });
+
+    // 点击菜单外部关闭菜单
+    document.addEventListener('click', (e) => {
+        if (!mobileNav.contains(e.target) && !menuToggle.contains(e.target) && mobileNav.classList.contains('open')) {
+            mobileNav.classList.remove('open');
+        }
+    });
+
+    // 阻止点击手机菜单内部时关闭菜单 (可选，但推荐)
+    mobileNav.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
   </script>
 </body>
 </html>

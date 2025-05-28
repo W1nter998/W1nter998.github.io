@@ -1,722 +1,345 @@
-/* style.css - iOS 风格简洁流畅设计 */
-
-/* --- 0. CSS Variables --- */
-:root {
-    --primary-color: #007aff; /* iOS 蓝色 */
-    --secondary-color: #f0f0f6; /* 浅灰色背景 */
-    --text-color: #333333;
-    --light-text-color: #666666;
-    --border-color: #e0e0e0;
-    --header-bg: #ffffff; /* 头部背景改为白色，更简洁 */
-    --header-text: #333333;
-    --link-hover-color: #005bb5; /* 链接 hover 颜色 */
-    --box-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.08);
-    --box-shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
-    --border-radius-small: 8px;
-    --border-radius-medium: 12px;
-    --transition-speed: 0.3s;
-    --mobile-breakpoint: 768px; /* 移动端断点 */
+/* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* --- 1. Reset & Base Styles --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* CSS Variables for easy theming */
+:root {
+  --primary-color: #0078d4; /* 主要操作色，例如按钮 */
+  --primary-hover-color: #005ea2; /* 主要操作色悬停 */
+  --text-color: #333; /* 主要文本颜色 */
+  --secondary-text-color: #555; /* 次要文本颜色 */
+  --background-color: #ffffff; /* 页面背景色 */
+  --header-bg-color: #000; /* 头部背景色 */
+  --header-text-color: #fff; /* 头部文本颜色 */
+  --footer-bg-color: #f5f5f5; /* 底部背景色 */
+  --border-color: #ddd; /* 边框颜色 */
+  --error-color: #dc3545; /* 错误提示色 */
+  --success-color: #28a745; /* 成功提示色 */
+  --warning-color: #ffc107; /* 警告色 */
+  --input-bg-color: #f8f8f8; /* 输入框背景色 */
+  --input-border-color: #ccc; /* 输入框边框色 */
+
+  --spacing-xs: 5px;
+  --spacing-sm: 10px;
+  --spacing-md: 20px;
+  --spacing-lg: 40px;
+  --spacing-xl: 60px;
 }
 
 body {
-    font-family: -apple-system, BlinkMacMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-    line-height: 1.6;
-    font-size: 16px;
-    -webkit-font-smoothing: antialiased; /* 平滑字体 */
-    -moz-osx-font-smoothing: grayscale; /* 平滑字体 */
-    overflow-x: hidden; /* 防止水平滚动 */
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  font-size: 16px;
 }
 
-/* Link normalization and iOS-like tap feedback */
+/* Link normalization */
 a {
-    color: var(--primary-color);
-    text-decoration: none;
-    transition: color var(--transition-speed), background-color var(--transition-speed);
+  color: inherit;
+  text-decoration: none;
 }
 
 a:hover {
-    color: var(--link-hover-color);
-    text-decoration: none; /* iOS 风格通常不带下划线 */
+  color: var(--primary-color);
+  text-decoration: underline;
 }
 
-button, input[type="submit"] {
-    cursor: pointer;
-    border: none;
-    outline: none;
-    background-color: var(--primary-color);
-    color: #ffffff;
-    padding: 10px 20px;
-    border-radius: var(--border-radius-small);
-    font-size: 16px;
-    font-weight: 500;
-    transition: background-color var(--transition-speed), transform 0.1s ease-out;
-}
-
-button:hover, input[type="submit"]:hover {
-    background-color: var(--link-hover-color);
-}
-
-button:active, input[type="submit"]:active {
-    transform: scale(0.98); /* iOS 按钮点击反馈 */
-}
-
-/* --- 2. Layout & Structure --- */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.main {
-    min-height: calc(100vh - 120px); /* 减去 header 和 footer 大致高度 */
-    padding: 40px 0;
-}
-
-.intro {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #ffffff;
-    border-radius: var(--border-radius-medium);
-    box-shadow: var(--box-shadow-light);
-    margin-bottom: 30px;
-}
-
-.intro h1 {
-    font-size: 2.5em;
-    color: var(--text-color);
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.intro p {
-    font-size: 1.1em;
-    color: var(--light-text-color);
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-/* --- 3. Header & Logo --- */
+/* Header & Logo */
 header {
-    background-color: var(--header-bg);
-    color: var(--header-text);
-    padding: 10px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: var(--box-shadow-light);
-    position: sticky;
-    top: 0;
-    z-index: 1000; /* 确保在最上层 */
-    height: 70px; /* 固定高度 */
+  background-color: var(--header-bg-color); /* 黑色顶部导航栏 */
+  color: var(--header-text-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 999;
 }
-
-header.nav-active {
-    /* 移动端菜单打开时 header 的样式调整，例如增加高度 */
-    min-height: 100vh; /* 覆盖整个视口 */
-    align-items: flex-start;
-    padding-top: 20px;
-}
-
 
 .logo {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0; /* 防止 logo 缩小 */
+  display: flex;
+  align-items: center;
 }
 
 .logo img {
-    height: 48px;
-    width: auto;
-    margin-right: 10px;
-    transition: transform var(--transition-speed);
-}
-
-.logo a:hover img {
-    transform: scale(1.05);
+  height: 48px;
+  width: auto;
+  margin-right: var(--spacing-sm);
 }
 
 .logo span {
-    font-size: 1.5em;
-    font-weight: 700;
-    color: var(--primary-color);
+  font-size: 1.5em;
+  font-weight: bold;
 }
 
-/* --- 4. Navigation Menu (Dynamic with JS) --- */
-#nav-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end; /* 右对齐 */
-    flex-grow: 1; /* 占据剩余空间 */
+/* Navigation Menu (Desktop) */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 24px;
 }
 
-.nav-main {
-    list-style: none;
-    display: flex;
-    align-items: center; /* 垂直居中 */
-    gap: 25px; /* 增加菜单项间距 */
-    margin-right: 20px; /* 与右侧操作区间隔 */
+nav ul li {
+  position: relative;
 }
 
-.nav-main li {
-    position: relative;
+nav ul li a {
+  padding: var(--spacing-sm) var(--spacing-xs);
+  display: block;
+  font-weight: 500;
 }
 
-.nav-main a {
-    color: var(--header-text);
-    font-weight: 500;
-    padding: 8px 12px;
-    display: block;
-    border-radius: var(--border-radius-small);
-    transition: background-color var(--transition-speed), color var(--transition-speed);
+nav ul li:hover > ul {
+  display: block;
 }
 
-.nav-main a:hover {
-    background-color: rgba(0, 0, 0, 0.05); /* 浅灰色背景 */
-    color: var(--primary-color);
+/* Submenu */
+nav ul ul {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--header-bg-color);
+  min-width: 160px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 1000;
 }
 
-.nav-main a.active {
-    color: var(--primary-color);
-    font-weight: 600;
-    background-color: rgba(0, 122, 255, 0.08); /* 浅蓝色背景 */
+nav ul ul li a {
+  color: var(--header-text-color);
+  padding: var(--spacing-sm);
 }
 
-/* Dropdown Menu */
-.dropdown-menu {
+/* Mobile Menu Button */
+.menu-toggle {
+  display: none; /* 默认隐藏，只在小屏幕显示 */
+  background: none;
+  border: none;
+  color: var(--header-text-color);
+  font-size: 30px; /* 汉堡图标大小 */
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Mobile Navigation (off-canvas) */
+.mobile-nav {
+  display: none; /* 默认隐藏 */
+  position: fixed; /* 固定定位，覆盖内容 */
+  top: 0;
+  right: -250px; /* 初始时隐藏在右侧 */
+  width: 250px;
+  height: 100%;
+  background-color: var(--header-bg-color);
+  box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+  transition: right 0.3s ease-in-out; /* 平滑过渡效果 */
+  z-index: 1001; /* 确保在其他内容之上 */
+  padding-top: var(--spacing-lg); /* 留出顶部空间，避免被 header 遮挡 */
+}
+
+.mobile-nav.open {
+  right: 0; /* 打开时显示 */
+}
+
+.mobile-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-nav ul li a {
+  display: block;
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--header-text-color);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-nav ul li a:hover {
+  background-color: var(--primary-color);
+}
+
+/* Close button for mobile menu */
+.close-btn {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-md);
+  background: none;
+  border: none;
+  color: var(--header-text-color);
+  font-size: 30px;
+  cursor: pointer;
+}
+
+/* Main content area padding */
+.main {
+    padding: var(--spacing-lg) var(--spacing-md);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Auth Forms (Login, Signup, Forgot Password, Reset Password) */
+.auth-form-container {
+  background-color: var(--background-color);
+  padding: var(--spacing-lg);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  max-width: 400px;
+  margin: var(--spacing-lg) auto; /* 居中显示 */
+  text-align: center;
+}
+
+.auth-form-container h1 {
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-md);
+  font-size: 2em;
+}
+
+.auth-form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.auth-form-container input[type="email"],
+.auth-form-container input[type="password"],
+.auth-form-container input[type="text"] {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  background-color: var(--input-bg-color);
+  font-size: 1em;
+}
+
+.auth-form-container button[type="submit"] {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--primary-color);
+  color: var(--header-text-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+
+.auth-form-container button[type="submit"]:hover {
+  background-color: var(--primary-hover-color);
+}
+
+.auth-form-container p {
+  margin-top: var(--spacing-sm);
+  font-size: 0.9em;
+}
+
+.auth-form-container p a {
+  color: var(--primary-color);
+}
+
+.auth-form-container .message {
+  margin-top: var(--spacing-sm);
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.auth-form-container .message.error {
+  color: var(--error-color);
+}
+
+.auth-form-container .message.success {
+  color: var(--success-color);
+}
+
+
+/* Footer */
+footer {
+  background-color: var(--footer-bg-color);
+  padding: var(--spacing-md);
+  font-size: 14px;
+  color: var(--secondary-text-color);
+  text-align: center;
+  margin-top: var(--spacing-lg); /* 确保底部有间距 */
+}
+
+/* QR Code styling */
+.qr-section {
+  text-align: center;
+  padding: var(--spacing-lg) 0;
+}
+
+.qr-section img {
+  height: 160px;
+  width: auto;
+  margin-top: var(--spacing-sm);
+}
+
+/* Page layout */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--spacing-lg) var(--spacing-md);
+}
+
+/* Headings */
+h1, h2, h3 {
+  margin-bottom: var(--spacing-md);
+  color: var(--text-color);
+}
+
+/* Button Styles */
+.button {
+  display: inline-block;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--primary-color);
+  color: var(--header-text-color);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: var(--primary-hover-color);
+}
+
+
+/* Responsive Layout */
+@media screen and (max-width: 768px) {
+  /* 隐藏桌面导航 */
+  nav {
     display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #ffffff;
-    min-width: 160px;
-    box-shadow: var(--box-shadow-medium);
-    border-radius: var(--border-radius-small);
-    padding: 10px 0;
-    z-index: 1010; /* 确保在下拉菜单在其他内容之上 */
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity var(--transition-speed) ease-out, transform var(--transition-speed) ease-out;
-}
+  }
 
-.dropdown:hover .dropdown-menu {
+  /* 显示手机菜单按钮 */
+  .menu-toggle {
     display: block;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.dropdown-menu li a {
-    padding: 10px 20px;
-    color: var(--text-color);
-    white-space: nowrap; /* 防止菜单项文字换行 */
-}
-
-.dropdown-menu li a:hover {
-    background-color: var(--secondary-color);
-    color: var(--primary-color);
-}
-
-/* Navigation Actions (Right Side) */
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.nav-actions a {
-    color: var(--primary-color); /* 行动按钮使用主色 */
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: var(--border-radius-small);
-    transition: background-color var(--transition-speed);
-}
-
-.nav-actions a:hover {
-    background-color: rgba(0, 122, 255, 0.08);
-}
-
-.nav-actions .nav-action-button {
-    background-color: var(--primary-color);
-    color: #ffffff;
-    padding: 8px 15px;
-    border-radius: var(--border-radius-small);
-    font-size: 15px;
-    font-weight: 500;
-}
-
-.nav-actions .user-email {
-    font-weight: 500;
-    color: var(--text-color);
-    padding: 8px 12px;
-    background-color: var(--secondary-color);
-    border-radius: var(--border-radius-small);
-}
-
-
-.lang-switcher {
-    padding: 6px 10px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-small);
-    background-color: #ffffff;
-    color: var(--text-color);
-    font-size: 15px;
-    appearance: none; /* 移除默认下拉箭头 */
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23333333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* 自定义下拉箭头 */
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    padding-right: 30px; /* 为箭头留出空间 */
-    cursor: pointer;
-}
-
-/* Hamburger Menu (Mobile) */
-.hamburger-menu {
-    display: none; /* 默认隐藏 */
-    width: 30px;
-    height: 20px;
-    position: relative;
-    cursor: pointer;
-    z-index: 1020; /* 确保在导航菜单之上 */
-    flex-shrink: 0;
-}
-
-.hamburger-menu span {
-    display: block;
-    width: 100%;
-    height: 2px;
-    background-color: var(--primary-color); /* 汉堡菜单颜色 */
-    position: absolute;
-    left: 0;
-    transition: all var(--transition-speed) ease;
-}
-
-.hamburger-menu span:nth-child(1) { top: 0; }
-.hamburger-menu span:nth-child(2) { top: 9px; }
-.hamburger-menu span:nth-child(3) { top: 18px; }
-
-.hamburger-menu.active span:nth-child(1) {
-    transform: rotate(45deg);
-    top: 9px;
-}
-.hamburger-menu.active span:nth-child(2) {
-    opacity: 0;
-}
-.hamburger-menu.active span:nth-child(3) {
-    transform: rotate(-45deg);
-    top: 9px;
-}
-
-/* --- 5. Media Queries for Responsiveness (Mobile First) --- */
-@media (max-width: var(--mobile-breakpoint)) {
-    header {
-        flex-wrap: wrap; /* 允许换行 */
-        padding: 15px 20px;
-        height: auto; /* 移动端高度自适应 */
-    }
-
-    .logo {
-        width: 100%;
-        justify-content: center;
-        margin-bottom: 15px;
-    }
-
-    .logo img {
-        height: 40px;
-    }
-
-    .logo span {
-        font-size: 1.3em;
-    }
-
-    #nav-container {
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        position: fixed; /* 固定在顶部 */
-        top: 70px; /* 位于 header 下方 */
-        left: 0;
-        height: calc(100vh - 70px); /* 占据屏幕剩余高度 */
-        background-color: var(--header-bg);
-        box-shadow: none; /* 移除阴影 */
-        padding: 20px;
-        transform: translateX(100%); /* 默认隐藏在右侧 */
-        transition: transform var(--transition-speed) ease-out;
-        overflow-y: auto; /* 允许内容滚动 */
-        justify-content: flex-start; /* 顶部对齐 */
-    }
-
-    header.nav-active #nav-container {
-        transform: translateX(0); /* 菜单滑入 */
-    }
-
-    .nav-main {
-        flex-direction: column;
-        width: 100%;
-        margin-right: 0;
-        gap: 0; /* 移除菜单项间距 */
-    }
-
-    .nav-main li {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 10px; /* 菜单项底部间距 */
-        border-bottom: 1px solid var(--border-color); /* 添加分割线 */
-        padding-bottom: 10px;
-    }
-
-    .nav-main li:last-child {
-        border-bottom: none; /* 最后一个没有分割线 */
-    }
-
-    .nav-main a {
-        padding: 15px 0; /* 增大点击区域 */
-        font-size: 1.1em;
-        border-radius: 0; /* 移除圆角 */
-    }
-
-    .nav-main a.active {
-        background-color: transparent; /* 移动端激活状态无背景 */
-        color: var(--primary-color);
-    }
-
-    .dropdown-menu {
-        position: static; /* 移动端显示为堆叠列表 */
-        box-shadow: none;
-        border-radius: 0;
-        padding: 0;
-        opacity: 1;
-        transform: translateY(0);
-        background-color: var(--secondary-color); /* 下拉菜单使用浅灰背景 */
-        margin-top: 10px;
-        overflow: hidden; /* 隐藏超出部分 */
-        max-height: 0; /* 默认折叠 */
-        transition: max-height var(--transition-speed) ease-out;
-    }
-
-    .dropdown.dropdown-active .dropdown-menu {
-        max-height: 200px; /* 展开高度，可根据实际内容调整 */
-        transition: max-height var(--transition-speed) ease-in;
-    }
-
-    .dropdown-menu li a {
-        padding: 10px 20px;
-        font-size: 1em;
-        text-align: center;
-    }
-    .dropdown-menu li a:hover {
-        background-color: rgba(0, 122, 255, 0.05);
-    }
-
-    .nav-actions {
-        flex-direction: column;
-        width: 100%;
-        margin-top: 20px;
-        border-top: 1px solid var(--border-color);
-        padding-top: 20px;
-    }
-    
-    .nav-actions a,
-    .nav-actions .nav-action-button,
-    .nav-actions .user-email,
-    .lang-switcher {
-        width: 100%;
-        text-align: center;
-        padding: 12px 15px; /* 增大点击区域 */
-        margin-bottom: 10px;
-    }
-
-    .lang-switcher {
-        background-position: right 15px center;
-    }
-
-    .hamburger-menu {
-        display: block; /* 在移动端显示 */
-    }
-}
-
-/* --- 6. General UI Components --- */
-.loading-spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
-    font-size: 1.1em;
-    color: var(--light-text-color);
-}
-
-.loading-spinner::after {
-    content: '';
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--primary-color);
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-left: 10px;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Forms */
-form {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: var(--border-radius-medium);
-    box-shadow: var(--box-shadow-medium);
-    max-width: 500px;
-    margin: 30px auto;
-}
-
-form label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: var(--text-color);
-}
-
-form input[type="text"],
-form input[type="email"],
-form input[type="password"],
-form textarea {
-    width: 100%;
-    padding: 12px 15px;
-    margin-bottom: 15px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-small);
-    font-size: 1em;
-    color: var(--text-color);
-    transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
-}
-
-form input[type="text"]:focus,
-form input[type="email"]:focus,
-form input[type="password"]:focus,
-form textarea:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
-    outline: none;
-}
-
-form textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-form button {
-    width: 100%;
-    padding: 15px;
-    font-size: 1.1em;
-}
-
-.form-message {
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: var(--border-radius-small);
-    text-align: center;
-    font-size: 0.95em;
-}
-
-.form-message.success {
-    background-color: #e6ffed; /* 浅绿色 */
-    color: #28a745; /* 绿色 */
-}
-
-.form-message.error {
-    background-color: #ffe6e6; /* 浅红色 */
-    color: #dc3545; /* 红色 */
-}
-
-/* Post Item/Card Styles */
-.post-list {
-    display: grid;
-    gap: 20px;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: var(--border-radius-medium);
-    box-shadow: var(--box-shadow-light);
-    max-width: 900px; /* 限制帖子列表宽度 */
-    margin: 30px auto;
-}
-
-.post-item {
-    background-color: #ffffff;
-    border-bottom: 1px solid var(--border-color);
-    padding: 15px 0;
-    transition: background-color var(--transition-speed);
-}
-.post-item:last-child {
-    border-bottom: none; /* 最后一个帖子没有底部边框 */
-}
-
-.post-item a {
-    display: block; /* 让整个区域可点击 */
-    padding: 10px 0; /* 增加点击区域 */
-    color: var(--text-color);
-}
-
-.post-item a:hover {
-    background-color: var(--secondary-color); /* hover 背景色 */
-    border-radius: var(--border-radius-small);
-}
-
-
-.post-item h3 {
-    font-size: 1.3em;
-    margin-bottom: 8px;
-    color: var(--primary-color);
-}
-
-.post-item p {
-    font-size: 0.95em;
-    color: var(--light-text-color);
-    margin-bottom: 10px;
-    line-height: 1.5;
-    /* 限制摘要行数 */
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* 显示3行 */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.post-item small {
-    font-size: 0.85em;
-    color: #999999;
-}
-
-/* Post Detail Page Specific Styles */
-.post-detail-container {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: var(--border-radius-medium);
-    box-shadow: var(--box-shadow-medium);
-    max-width: 800px;
-    margin: 30px auto;
-}
-
-.post-detail-container h1 {
-    font-size: 2.2em;
-    color: var(--primary-color);
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.post-meta {
-    font-size: 0.9em;
-    color: var(--light-text-color);
-    margin-bottom: 30px;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 15px;
-    text-align: left;
-}
-
-.post-content {
-    font-size: 1.1em;
-    line-height: 1.8;
-    color: var(--text-color);
-    text-align: left;
-}
-
-.post-content p {
-    margin-bottom: 1em;
-}
-
-.post-content img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 20px auto;
-    border-radius: var(--border-radius-small);
-}
-
-/* --- 7. Footer --- */
-.footer {
-    text-align: center;
-    padding: 20px;
-    color: var(--light-text-color);
-    font-size: 0.9em;
-    border-top: 1px solid var(--border-color);
-    background-color: #ffffff;
-    margin-top: 40px;
-}
-
-/* --- 8. Specific Page Adjustments (if needed) --- */
-/* For pages like about, contact, services etc. */
-section.intro ul {
-    list-style: none; /* 移除默认列表点 */
-    padding: 0;
-    margin-top: 20px;
-    display: inline-block; /* 使得 ul 宽度适应内容 */
-    text-align: left; /* 列表项左对齐 */
-}
-
-section.intro ul li {
-    background-color: var(--secondary-color);
-    padding: 10px 15px;
-    margin-bottom: 8px;
-    border-radius: var(--border-radius-small);
-    color: var(--text-color);
-    font-size: 1em;
-}
-
-section.intro ul li::before {
-    content: '✅ '; /* 或其他图标 */
-    margin-right: 8px;
-}
-
-/* QR Code for Contact Page */
-.contact-qrcode {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: var(--secondary-color);
-    border-radius: var(--border-radius-medium);
-    display: inline-block; /* 包裹内容 */
-}
-
-.contact-qrcode img {
-    width: 120px;
-    height: auto;
-    display: block; /* 移除图片底部空白 */
-    margin: 10px auto 0;
-}
-
-/* Loading overlay for full page loading */
-.page-loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; /* 确保在最上层 */
-    transition: opacity 0.3s ease-out;
-    opacity: 1;
-    visibility: visible;
-}
-
-.page-loading-overlay.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none; /* 隐藏后不阻挡点击事件 */
-}
-
-.page-loading-overlay .spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-left-color: var(--primary-color);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 0.8s linear infinite;
+  }
+  
+  /* 调整 header 布局 */
+  header {
+    justify-content: space-between; /* 让 logo 和菜单按钮分散对齐 */
+  }
+
+  /* 调整 logo 大小 */
+  .logo img {
+    height: 36px;
+  }
+
+  /* 隐藏桌面语言切换器，因为我们会在手机菜单里放一个 */
+  .lang-switcher {
+    display: none;
+  }
+
+  /* 调整 nav-actions (登录/联系我们) 在手机端的显示 */
+  .nav-actions {
+    display: none; /* 默认隐藏，在手机菜单中显示 */
+  }
+
+  .auth-form-container {
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) auto;
+  }
 }
