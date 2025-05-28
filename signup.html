@@ -95,12 +95,30 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
-  <script src="init-supabase.js" defer></script> <script>
+
+  <script defer>
+    // 定义 Supabase URL 和 Key
+    window.SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
+    window.SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
+
+    // 声明全局的 supabase 客户端变量
+    let supabaseClientInstance;
+
+    // 确保全局的 `supabase` 对象 (由 Supabase SDK 加载后暴露，它就是 createClient 函数) 已经存在
+    if (typeof supabase !== 'undefined' && typeof supabase === 'function') {
+      // 直接调用全局的 `supabase` 函数来创建客户端实例
+      supabaseClientInstance = supabase(window.SUPABASE_URL, window.SUPABASE_KEY);
+      window.supabase = supabaseClientInstance; // 将创建的客户端实例赋值给 window.supabase
+      console.log("Global Supabase client initialized from signup.html inline script.");
+    } else {
+      console.error("Error: Supabase SDK (global 'supabase' object) not loaded or is not the createClient function in inline script.");
+    }
+
     // 在 DOMContentLoaded 事件中执行页面逻辑
     document.addEventListener('DOMContentLoaded', async () => {
-      // 确保全局的 supabase 客户端已经由 init-supabase.js 初始化
-      if (typeof supabase === 'undefined' || !supabase.auth) {
-        console.error("Supabase client is not properly initialized. Check init-supabase.js and script loading order.");
+      // 确保全局的 supabase 客户端已经由内联脚本初始化
+      if (typeof window.supabase === 'undefined' || !window.supabase.auth) {
+        console.error("Supabase client is not properly initialized. Check inline script.");
         document.getElementById('signup-message').textContent = '初始化Supabase失败，请稍后再试。';
         document.getElementById('signup-message').style.color = 'var(--error-color)';
         return;
@@ -128,8 +146,8 @@
         }
         
         try {
-          // 直接使用全局的 supabase 对象
-          const { data, error } = await supabase.auth.signUp({
+          // 直接使用全局的 window.supabase 对象
+          const { data, error } = await window.supabase.auth.signUp({
             email,
             password,
             options: {
@@ -153,7 +171,7 @@
           } else {
             // ====== 新增：手动调用 Edge Function 来创建 profiles ======
             if (data.user) {
-              // 从 window.SUPABASE_URL 获取 URL，因为在 init-supabase.js 中已设置为全局变量
+              // 从 window.SUPABASE_URL 获取 URL，因为在内联脚本中已设置为全局变量
               const edgeFunctionUrl = `${window.SUPABASE_URL}/functions/v1/handle-new-user-profile`; 
               const payload = {
                 type: 'INSERT', // 模拟 Auth Webhook 类型
