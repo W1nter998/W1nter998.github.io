@@ -95,164 +95,156 @@
   </div>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+  <script src="supabase.js" defer></script> 
   <script>
-    // Supabase 初始化
-    const SUPABASE_URL = "https://eiaxcwfyocnnwhkdgioh.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpYXhjd2Z5b2Nubndoa2RnaW9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc5NzYyNjEsImV4cCI6MjA2MzU1MjI2MX0.k2SfqrA7mFieCPePznOt5joGO03b7c1DlaH5tjtYq_E";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const signupForm = document.getElementById('signup-form');
-    const signupMessage = document.getElementById('signup-message');
-    const menuToggle = document.querySelector('.menu-toggle');
-    const mobileNav = document.getElementById('mobile-nav');
-    const closeBtn = document.querySelector('.close-btn');
-
-    signupForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      signupMessage.textContent = ''; // 清空之前的消息
-
-      const email = document.getElementById('email').value.trim();
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const inviteCode = document.getElementById('invite-code').value.trim();
-
-      if (username.length < 3 || username.length > 20) {
-        signupMessage.textContent = '昵称长度需在3-20个字符之间。';
-        signupMessage.style.color = 'var(--error-color)';
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 确保 supabase 客户端已经被全局初始化（在 supabase.js 中）
+      if (typeof supabase === 'undefined') {
+        console.error("Supabase client is not initialized. Check supabase.js.");
+        document.getElementById('signup-message').textContent = '初始化Supabase失败，请稍后再试。';
+        document.getElementById('signup-message').style.color = 'var(--error-color)';
         return;
       }
       
-      try {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          // 在这里传递 username 和 invite_code 给 user_metadata
-          // 这样在 Edge Function 中可以通过 data.user.user_metadata 访问
-          options: {
-            data: {
-              username: username,
-              ...(inviteCode && { invite_code: inviteCode })
-            }
-          }
-        });
+      const signupForm = document.getElementById('signup-form');
+      const signupMessage = document.getElementById('signup-message');
+      const menuToggle = document.querySelector('.menu-toggle');
+      const mobileNav = document.getElementById('mobile-nav');
+      const closeBtn = document.querySelector('.close-btn');
 
-        if (error) {
-          if (error.message.includes('User already registered')) {
-            signupMessage.textContent = '该邮箱已注册，请直接登录或尝试找回密码。';
-          } else if (error.message.includes('Username already taken.')) {
-            // 这个错误现在可能由 Edge Function 返回，如果前端直接调用。
-            // 但如果 Auth.signUp 层面就提示昵称被占用，则也需要处理。
-            signupMessage.textContent = '该昵称已被使用，请更换一个。';
-          }
-          else {
-            signupMessage.textContent = '注册失败：' + error.message;
-          }
+      signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        signupMessage.textContent = ''; // 清空之前的消息
+
+        const email = document.getElementById('email').value.trim();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const inviteCode = document.getElementById('invite-code').value.trim();
+
+        if (username.length < 3 || username.length > 20) {
+          signupMessage.textContent = '昵称长度需在3-20个字符之间。';
           signupMessage.style.color = 'var(--error-color)';
-        } else {
-          // ====== 新增：手动调用 Edge Function 来创建 profiles ======
-          if (data.user) {
-            const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/handle-new-user-profile`;
-            const payload = {
-              type: 'INSERT', // 模拟 Auth Webhook 类型
-              table: 'users', // 模拟 Auth Webhook 表名
-              record: {
-                id: data.user.id,
-                email: data.user.email,
-                user_metadata: {
-                  username: username,
-                  ...(inviteCode && { invite_code: inviteCode })
-                }
-              }
-            };
-
-            const response = await fetch(edgeFunctionUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                // 重要：从前端调用 Edge Function，需要传递用户当前的 JWT
-                // 否则 Edge Function 内部的 supabaseAdmin 客户端将无法识别用户
-                'Authorization': `Bearer ${data.session?.access_token || SUPABASE_KEY}` 
-                // 如果用户尚未完全登录（例如需要邮箱验证），则 session.access_token 可能为空。
-                // 此时，如果 Edge Function 内部依赖 Auth 的 context，可能会有问题。
-                // 但是我们的 handle-new-user-profile 函数内部用的是 service_role_key，所以不需要用户JWT。
-                // 仅传递 API Key 作为 fallback 或一般请求头。
-              },
-              body: JSON.stringify(payload)
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-              console.error('Error calling Edge Function:', result.error);
-              signupMessage.textContent = '注册成功，但用户资料创建失败：' + (result.message || result.error || '未知错误');
-              signupMessage.style.color = 'var(--error-color)';
-              // 尽管 profiles 创建失败，用户账户本身是注册成功的，仍然引导其激活邮箱
-              signupMessage.textContent += ' 请前往您的邮箱 ' + email + ' 激活账户。';
-            } else {
-              console.log('Edge Function called successfully:', result);
-              signupMessage.style.color = 'var(--success-color)';
-              signupMessage.textContent = '注册成功！请前往您的邮箱 ' + email + ' 激活账户。';
-              signupForm.reset();
-            }
-          } else {
-            // 如果 data.user 为空，可能是注册失败但 error 对象为空的情况
-            signupMessage.textContent = '注册成功，但未返回用户数据，请检查邮箱。';
-            signupMessage.style.color = 'var(--warning-color)';
-          }
-          // ====== 结束：手动调用 Edge Function ======
+          return;
         }
-      } catch (err) {
-        console.error('An unexpected error occurred:', err);
-        signupMessage.textContent = '注册过程中发生未知错误。';
-        signupMessage.style.color = 'var(--error-color)';
+        
+        try {
+          const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                username: username,
+                ...(inviteCode && { invite_code: inviteCode })
+              }
+            }
+          });
+
+          if (error) {
+            if (error.message.includes('User already registered')) {
+              signupMessage.textContent = '该邮箱已注册，请直接登录或尝试找回密码。';
+            } else if (error.message.includes('Username already taken.')) {
+              signupMessage.textContent = '该昵称已被使用，请更换一个。';
+            }
+            else {
+              signupMessage.textContent = '注册失败：' + error.message;
+            }
+            signupMessage.style.color = 'var(--error-color)';
+          } else {
+            // ====== 新增：手动调用 Edge Function 来创建 profiles ======
+            if (data.user) {
+              const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/handle-new-user-profile`;
+              const payload = {
+                type: 'INSERT', // 模拟 Auth Webhook 类型
+                table: 'users', // 模拟 Auth Webhook 表名
+                record: {
+                  id: data.user.id,
+                  email: data.user.email,
+                  user_metadata: {
+                    username: username,
+                    ...(inviteCode && { invite_code: inviteCode })
+                  }
+                }
+              };
+
+              const response = await fetch(edgeFunctionUrl, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${data.session?.access_token || SUPABASE_KEY}`
+                },
+                body: JSON.stringify(payload)
+              });
+
+              const result = await response.json();
+
+              if (!response.ok) {
+                console.error('Error calling Edge Function:', result.error);
+                signupMessage.textContent = '注册成功，但用户资料创建失败：' + (result.message || result.error || '未知错误');
+                signupMessage.style.color = 'var(--error-color)';
+                signupMessage.textContent += ' 请前往您的邮箱 ' + email + ' 激活账户。';
+              } else {
+                console.log('Edge Function called successfully:', result);
+                signupMessage.style.color = 'var(--success-color)';
+                signupMessage.textContent = '注册成功！请前往您的邮箱 ' + email + ' 激活账户。';
+                signupForm.reset();
+              }
+            } else {
+              signupMessage.textContent = '注册成功，但未返回用户数据，请检查邮箱。';
+              signupMessage.style.color = 'var(--warning-color)';
+            }
+          }
+        } catch (err) {
+          console.error('An unexpected error occurred during signup or Edge Function call:', err);
+          signupMessage.textContent = '注册过程中发生未知错误。';
+          signupMessage.style.color = 'var(--error-color)';
+        }
+      });
+
+      // 手机菜单切换逻辑
+      menuToggle.addEventListener('click', () => {
+        mobileNav.classList.add('open');
+      });
+
+      closeBtn.addEventListener('click', () => {
+        mobileNav.classList.remove('open');
+      });
+
+      // 点击菜单外部关闭菜单
+      document.addEventListener('click', (e) => {
+          if (!mobileNav.contains(e.target) && !menuToggle.contains(e.target) && mobileNav.classList.contains('open')) {
+              mobileNav.classList.remove('open');
+          }
+      });
+
+      // 阻止点击手机菜单内部时关闭菜单 (可选，但推荐)
+      mobileNav.addEventListener('click', (e) => {
+          e.stopPropagation();
+      });
+
+      // 语言切换器逻辑 (桌面端和移动端可能需要同步)
+      const desktopLangSwitcher = document.querySelector('.lang-switcher');
+      const mobileLangSwitcher = document.querySelector('.lang-switcher-mobile');
+
+      if (desktopLangSwitcher) {
+        desktopLangSwitcher.addEventListener('change', (e) => {
+          console.log('Desktop language changed to:', e.target.value);
+          if (mobileLangSwitcher) {
+            mobileLangSwitcher.value = e.target.value; // 同步移动端选择
+          }
+          // 在这里添加切换语言的逻辑
+        });
+      }
+
+      if (mobileLangSwitcher) {
+        mobileLangSwitcher.addEventListener('change', (e) => {
+          console.log('Mobile language changed to:', e.target.value);
+          if (desktopLangSwitcher) {
+            desktopLangSwitcher.value = e.target.value; // 同步桌面端选择
+          }
+          // 在这里添加切换语言的逻辑
+        });
       }
     });
-
-    // 手机菜单切换逻辑
-    menuToggle.addEventListener('click', () => {
-      mobileNav.classList.add('open');
-    });
-
-    closeBtn.addEventListener('click', () => {
-      mobileNav.classList.remove('open');
-    });
-
-    // 点击菜单外部关闭菜单
-    document.addEventListener('click', (e) => {
-        if (!mobileNav.contains(e.target) && !menuToggle.contains(e.target) && mobileNav.classList.contains('open')) {
-            mobileNav.classList.remove('open');
-        }
-    });
-
-    // 阻止点击手机菜单内部时关闭菜单 (可选，但推荐)
-    mobileNav.addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
-
-    // 语言切换器逻辑 (桌面端和移动端可能需要同步)
-    const desktopLangSwitcher = document.querySelector('.lang-switcher');
-    const mobileLangSwitcher = document.querySelector('.lang-switcher-mobile');
-
-    if (desktopLangSwitcher) {
-      desktopLangSwitcher.addEventListener('change', (e) => {
-        console.log('Desktop language changed to:', e.target.value);
-        if (mobileLangSwitcher) {
-          mobileLangSwitcher.value = e.target.value; // 同步移动端选择
-        }
-        // 在这里添加切换语言的逻辑
-      });
-    }
-
-    if (mobileLangSwitcher) {
-      mobileLangSwitcher.addEventListener('change', (e) => {
-        console.log('Mobile language changed to:', e.target.value);
-        if (desktopLangSwitcher) {
-          desktopLangSwitcher.value = e.target.value; // 同步桌面端选择
-        }
-        // 在这里添加切换语言的逻辑
-      });
-    }
-
   </script>
 </body>
 </html>
